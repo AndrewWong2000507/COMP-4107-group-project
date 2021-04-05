@@ -1,5 +1,7 @@
 package ATMSS;
 
+import ATMSS.BuzzerHandler.BuzzerHandler;
+import ATMSS.BuzzerHandler.Emulator.BuzzerEmulator;
 import AppKickstarter.timer.Timer;
 
 import ATMSS.ATMSS.ATMSS;
@@ -57,6 +59,7 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
             TouchDisplayEmulator touchDisplayEmulator = null;
             AdvicePrinterEmulator advicePrinterEmulator = null;
             CashDispenserEmulator cashDispenserEmulator = null;
+            BuzzerEmulator buzzerEmulator = null;
 
             // create emulators
             try {
@@ -67,12 +70,14 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
                 touchDisplayEmulator = new TouchDisplayEmulator("TouchDisplayHandler", atmssEmulatorStarter);
                 advicePrinterEmulator = new AdvicePrinterEmulator("AdvicePrinterHandler", atmssEmulatorStarter);
                 cashDispenserEmulator = new CashDispenserEmulator("CashDispenserHandler", atmssEmulatorStarter);
+                buzzerEmulator = new BuzzerEmulator("BuzzerHandler",atmssEmulatorStarter);
                 // start emulator GUIs
                 keypadEmulator.start();
                 cardReaderEmulator.start();
                 touchDisplayEmulator.start();
                 advicePrinterEmulator.start();
                 cashDispenserEmulator.start();
+                buzzerEmulator.start();
             } catch (Exception e) {
                 System.out.println("Emulators: start failed");
                 e.printStackTrace();
@@ -85,6 +90,7 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
             atmssEmulatorStarter.setTouchDisplayHandler(touchDisplayEmulator);
             atmssEmulatorStarter.setAdvicePrinterHandler(advicePrinterEmulator);
             atmssEmulatorStarter.setCashDispenserHandler(cashDispenserEmulator);
+            atmssEmulatorStarter.setBuzzerHandler(buzzerEmulator);
             // start threads
             new Thread(timer).start();
             new Thread(atmss).start();
@@ -93,6 +99,7 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
             new Thread(touchDisplayEmulator).start();
             new Thread(advicePrinterEmulator).start();
             new Thread(cashDispenserEmulator).start();
+            new Thread(buzzerEmulator).start();
         } // start
     } // Emulators
 
@@ -125,5 +132,8 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
 
     private void setCashDispenserHandler(CashDispenserHandler cashDispenserHandler) {
         this.cashDispenserHandler = cashDispenserHandler;
+    }
+    private void setBuzzerHandler(BuzzerHandler buzzerHandler) {
+        this.buzzerHandler = buzzerHandler;
     }
 } // ATMSSEmulatorStarter
