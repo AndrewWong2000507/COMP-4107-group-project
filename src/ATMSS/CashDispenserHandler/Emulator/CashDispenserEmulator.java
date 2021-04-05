@@ -1,2 +1,4 @@
-package ATMSS.CashDispenserHandler.Emulator;public class CashDispenserEmulator {
+package ATMSS.CashDispenserHandler.Emulator;
+
+public class CashDispenserEmulator {
 }

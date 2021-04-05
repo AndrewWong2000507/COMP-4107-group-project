@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ATMSS.AdvicePrinterHandler.Emulator.AdvicePrinterEmulator"
-            prefHeight="400.0" prefWidth="600.0">
+            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="301.0" prefWidth="305.0"
+            fx:controller="ATMSS.AdvicePrinterHandler.Emulator.AdvicePrinterEmulatorController">
+    <children>
+        <TextArea fx:id="advicePrintArea" editable="false" layoutX="33.0" layoutY="30.0"
+                  prefHeight="200.0" prefWidth="237.0"
+                  AnchorPane.bottomAnchor="71" AnchorPane.leftAnchor="33" AnchorPane.rightAnchor="34"
+                  AnchorPane.topAnchor="30"/>
 
+
+        <Button fx:id="confirmReceiveAdviceButton" onAction="#handleClick" text="receive advice" layoutX="33.0"
+                layoutY="247.0"
+                prefHeight="26.0" prefWidth="238.0"
+                AnchorPane.bottomAnchor="14.0"
+                AnchorPane.leftAnchor="33" AnchorPane.rightAnchor="33"
+                AnchorPane.topAnchor="260"/>
+    </children>
 </AnchorPane>

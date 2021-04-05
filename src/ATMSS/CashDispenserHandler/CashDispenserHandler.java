@@ -1,2 +1,4 @@
-package ATMSS.CashDispenserHandler;public class CashDispenserHandler {
+package ATMSS.CashDispenserHandler;
+
+public class CashDispenserHandler {
 }
