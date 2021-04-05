@@ -8,7 +8,24 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ATMSS.CashDispenserHandler.Emulator.CashDispenserEmulator"
-            prefHeight="400.0" prefWidth="600.0">
+            maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity" minWidth="-Infinity"
+            fx:controller="ATMSS.CashDispenserHandler.Emulator.CashDispenserEmulatorController"
+            prefHeight="238.0" prefWidth="444.0">
+    <children>
+        <GridPane AnchorPane.bottomAnchor="80.6" AnchorPane.leftAnchor="54.0" AnchorPane.rightAnchor="54.0"
+                  AnchorPane.topAnchor="35.0" layoutX="54.0" layoutY="35.0">
+            <Label text="\$100     " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="\$500     " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="\$1000    " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="Total :   " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        </GridPane>
+        <Button text="collect cash" AnchorPane.topAnchor="181" AnchorPane.rightAnchor="153" AnchorPane.leftAnchor="153"
+                AnchorPane.bottomAnchor="31.4" layoutY="181" layoutX="196"/>
+    </children>
 
 </AnchorPane>
