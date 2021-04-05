@@ -11,7 +11,7 @@ public class TestBAMSHandler {
     //------------------------------------------------------------
     // main
     public static void main(String[] args) {
-	String urlPrefix = "http://cslinux0.comp.hkbu.edu.hk/~comp4107/test/";
+	String urlPrefix = "http://cslinux0.comp.hkbu.edu.hk/comp4107_20-21_grp12/test/BAMS.php";
 
 	// try logging in
 	// BAMSHandler bams = new BAMSHandler(urlPrefix);		// without logger
