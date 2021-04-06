@@ -2,6 +2,8 @@ package ATMSS;
 
 import ATMSS.BuzzerHandler.BuzzerHandler;
 import ATMSS.BuzzerHandler.Emulator.BuzzerEmulator;
+import ATMSS.CashDepositCollectorHandler.Emulator.CashDepositCollectorEmulator;
+import ATMSS.CashDepositCollectorHandler.CashDepositCollectorHandler;
 import AppKickstarter.timer.Timer;
 
 import ATMSS.ATMSS.ATMSS;
@@ -60,7 +62,7 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
             AdvicePrinterEmulator advicePrinterEmulator = null;
             CashDispenserEmulator cashDispenserEmulator = null;
             BuzzerEmulator buzzerEmulator = null;
-
+            CashDepositCollectorEmulator cashDepositCollectorEmulator = null;
             // create emulators
             try {
                 timer = new Timer("timer", atmssEmulatorStarter);
@@ -70,7 +72,8 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
                 touchDisplayEmulator = new TouchDisplayEmulator("TouchDisplayHandler", atmssEmulatorStarter);
                 advicePrinterEmulator = new AdvicePrinterEmulator("AdvicePrinterHandler", atmssEmulatorStarter);
                 cashDispenserEmulator = new CashDispenserEmulator("CashDispenserHandler", atmssEmulatorStarter);
-                buzzerEmulator = new BuzzerEmulator("BuzzerHandler",atmssEmulatorStarter);
+                buzzerEmulator = new BuzzerEmulator("BuzzerHandler", atmssEmulatorStarter);
+                cashDepositCollectorEmulator = new CashDepositCollectorEmulator("CashDepositCollectorHandler", atmssEmulatorStarter);
                 // start emulator GUIs
                 keypadEmulator.start();
                 cardReaderEmulator.start();
@@ -78,6 +81,7 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
                 advicePrinterEmulator.start();
                 cashDispenserEmulator.start();
                 buzzerEmulator.start();
+                cashDepositCollectorEmulator.start();
             } catch (Exception e) {
                 System.out.println("Emulators: start failed");
                 e.printStackTrace();
@@ -91,6 +95,7 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
             atmssEmulatorStarter.setAdvicePrinterHandler(advicePrinterEmulator);
             atmssEmulatorStarter.setCashDispenserHandler(cashDispenserEmulator);
             atmssEmulatorStarter.setBuzzerHandler(buzzerEmulator);
+            atmssEmulatorStarter.setCashDepositCollectorHandler(cashDepositCollectorEmulator);
             // start threads
             new Thread(timer).start();
             new Thread(atmss).start();
@@ -100,6 +105,7 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
             new Thread(advicePrinterEmulator).start();
             new Thread(cashDispenserEmulator).start();
             new Thread(buzzerEmulator).start();
+            new Thread(cashDepositCollectorEmulator).start();
         } // start
     } // Emulators
 
@@ -133,7 +139,12 @@ public class ATMSSEmulatorStarter extends ATMSSStarter {
     private void setCashDispenserHandler(CashDispenserHandler cashDispenserHandler) {
         this.cashDispenserHandler = cashDispenserHandler;
     }
+
     private void setBuzzerHandler(BuzzerHandler buzzerHandler) {
         this.buzzerHandler = buzzerHandler;
     }
-} // ATMSSEmulatorStarter
+
+    private void setCashDepositCollectorHandler(CashDepositCollectorHandler cashDepositCollectorHandler) {
+        this.cashDepositCollectorHandler = cashDepositCollectorHandler;
+    }
+}// ATMSSEmulatorStarter

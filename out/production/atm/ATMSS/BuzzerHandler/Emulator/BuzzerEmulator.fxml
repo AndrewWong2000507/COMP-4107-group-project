@@ -13,7 +13,7 @@
             maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="214.0" prefWidth="264.0">
     <children>
-        <Label text="Alerting" textAlignment="JUSTIFY"
+        <Label text="Alerting" textAlignment="JUSTIFY" fx:id="buzzerStatus"
                AnchorPane.bottomAnchor="52" AnchorPane.leftAnchor="62" AnchorPane.rightAnchor="62"
                AnchorPane.topAnchor="20" layoutX="62" layoutY="52">
             <font>

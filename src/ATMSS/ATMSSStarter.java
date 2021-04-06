@@ -1,6 +1,7 @@
 package ATMSS;
 
 import ATMSS.BuzzerHandler.BuzzerHandler;
+import ATMSS.CashDepositCollectorHandler.CashDepositCollectorHandler;
 import AppKickstarter.AppKickstarter;
 import AppKickstarter.misc.Msg;
 import AppKickstarter.timer.Timer;
@@ -25,6 +26,7 @@ public class ATMSSStarter extends AppKickstarter {
     protected AdvicePrinterHandler advicePrinterHandler;
     protected CashDispenserHandler cashDispenserHandler;
     protected BuzzerHandler buzzerHandler;
+    protected CashDepositCollectorHandler cashDepositCollectorHandler;
 
 
     //------------------------------------------------------------
@@ -67,6 +69,7 @@ public class ATMSSStarter extends AppKickstarter {
             advicePrinterHandler = new AdvicePrinterHandler("AdvicePrinterHandler", this);
             cashDispenserHandler = new CashDispenserHandler("CashDispenserHandler", this);
             buzzerHandler = new BuzzerHandler("BuzzerHandler", this);
+            cashDepositCollectorHandler = new CashDepositCollectorHandler("CashDepositCollectorHandler", this);
         } catch (Exception e) {
             System.out.println("AppKickstarter: startApp failed");
             e.printStackTrace();
@@ -82,6 +85,7 @@ public class ATMSSStarter extends AppKickstarter {
         new Thread(advicePrinterHandler).start();
         new Thread(cashDispenserHandler).start();
         new Thread(buzzerHandler).start();
+        new Thread(cashDepositCollectorHandler).start();
     } // startHandlers
 
 
@@ -98,7 +102,8 @@ public class ATMSSStarter extends AppKickstarter {
         touchDisplayHandler.getMBox().send(new Msg(id, null, Msg.Type.Terminate, "Terminate now!"));
         timer.getMBox().send(new Msg(id, null, Msg.Type.Terminate, "Terminate now!"));
         advicePrinterHandler.getMBox().send(new Msg(id, null, Msg.Type.Terminate, "Terminate now!"));
-        cashDispenserHandler.getMBox().send(new Msg(id, null, Msg.Type.Terminate, ""));
-        buzzerHandler.getMBox().send(new Msg(id, null, Msg.Type.Terminate, ""));
+        cashDispenserHandler.getMBox().send(new Msg(id, null, Msg.Type.Terminate, "Terminate now!"));
+        buzzerHandler.getMBox().send(new Msg(id, null, Msg.Type.Terminate, "Terminate now!"));
+        cashDepositCollectorHandler.getMBox().send(new Msg(id, null, Msg.Type.Terminate, "Terminate now!"));
     } // stopApp
 } // ATM.ATMSSStarter

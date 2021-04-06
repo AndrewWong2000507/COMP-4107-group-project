@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.text.Font?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
@@ -23,6 +24,10 @@
                 prefHeight="26.0" prefWidth="238.0"
                 AnchorPane.bottomAnchor="14.0"
                 AnchorPane.leftAnchor="33" AnchorPane.rightAnchor="33"
-                AnchorPane.topAnchor="260"/>
+                AnchorPane.topAnchor="260">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Button>
     </children>
 </AnchorPane>
