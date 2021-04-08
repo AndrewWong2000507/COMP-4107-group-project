@@ -1,15 +1,12 @@
 package ATMSS.ATMSS;
 
 import ATMSS.BAMSHandler.BAMSHandler;
-import ATMSS.BAMSHandler.BAMSInvalidReplyException;
-
-import java.io.IOException;
 
 public class HasPin implements ATMState {
     ATMSS atmMachine;
 
-    String urlPrefix = "http://cslinux0.comp.hkbu.edu.hk/comp4107_20-21_grp12/BAMS.php";
-    BAMSHandler bams = new BAMSHandler(urlPrefix);
+    //String urlPrefix = "http://cslinux0.comp.hkbu.edu.hk/comp4107_20-21_grp12/BAMS.php";
+    //BAMSHandler bams = new BAMSHandler(urlPrefix);
 
     public HasPin(ATMSS atmss) {
         atmMachine = atmss;

@@ -47,7 +47,7 @@ public class ATMSS extends AppThread {
     } // ATMSS
 
     //Change ATM state
-    void setATMState(ATMState newATMState) {
+    void setATMState(ATMState newATMState){
         atmState = newATMState;
     }
 
@@ -59,27 +59,15 @@ public class ATMSS extends AppThread {
         atmState.ejectCard();
     }
 
-    public void insertPin(String CardNum, String Pin) {
+    public void insertPin(String CardNum, String Pin){
         atmState.insertPin(CardNum, Pin);
     }
 
-    public ATMState getYesCardState() {
-        return hasCard;
-    }
-
-    public ATMState getNoCardState() {
-        return noCard;
-    }
-
-    public ATMState getHasPin() {
-        return hasCorrectPin;
-    }
+    public ATMState getYesCardState(){return hasCard;}
+    public ATMState getNoCardState(){return noCard;}
+    public ATMState getHasPin(){return hasCorrectPin;}
 
     //end Change ATM state
-
-    //transaction record
-
-    //end of transaction record
 
     //------------------------------------------------------------
     // run
@@ -119,11 +107,9 @@ public class ATMSS extends AppThread {
                     break;
 
                 case CR_EjectCard:
-                    advicePrinterMBox.send(new Msg(id, mbox, Msg.Type.AP_Print, "This is the advice details"));
                     this.ejectCard();
                     cardNo = "";
                     log.info("CardEjected: " + msg.getDetails());
-                    touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
                     break;
 
                 case CR_CardRemoved:
@@ -147,8 +133,6 @@ public class ATMSS extends AppThread {
                     quit = true;
                     break;
 
-                case CD_CashDispense:
-
                 default:
                     log.warning(id + ": unknown message type: [" + msg + "]");
             }
@@ -165,17 +149,8 @@ public class ATMSS extends AppThread {
     private void processKeyPressed(Msg msg) {
         if (atmState == hasCard) {
             String key = msg.getDetails();
-            switch (key) {
-                case "0":
-                case "1":
-                case "2":
-                case "3":
-                case "4":
-                case "5":
-                case "6":
-                case "7":
-                case "8":
-                case "9":
+            switch(key) {
+                case "0": case "1": case "2": case "3": case "4": case "5": case "6": case "7": case "8": case "9":
                     System.out.println("Key Pressed:" + key);
                     pin = pin + key;
                     System.out.println("Pin:" + pin);
@@ -188,7 +163,7 @@ public class ATMSS extends AppThread {
                     this.insertPin(cardNo, pin);
                     break;
                 case "Erase":
-                    pin = pin.substring(0, pin.length() - 1);
+                    pin = pin.substring(0, pin.length()-1);
                     break;
                 default:
                     break;
@@ -197,50 +172,30 @@ public class ATMSS extends AppThread {
             if (msg.getDetails().compareToIgnoreCase("Cancel") == 0) {
                 cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, ""));
             } else if (msg.getDetails().compareToIgnoreCase("1") == 0) {
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
+            } else if (msg.getDetails().compareToIgnoreCase("2") == 0) {
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "MainMenu"));
-            } else if (msg.getDetails().compareToIgnoreCase("Enter") == 0) {
+            } else if (msg.getDetails().compareToIgnoreCase("3") == 0) {
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "Confirmation"));
             }
         }
         // *** The following is an example only!! ***
     }
-    // processKeyPressed
+     // processKeyPressed
 
 
     //------------------------------------------------------------
     // processMouseClicked
     private void processMouseClicked(Msg msg) {
         // *** process mouse click here!!! ***
-        String[] pos = msg.getDetails().trim().split("\\s+");
-        int posX = Integer.parseInt(pos[0]);
-        int posY = Integer.parseInt(pos[1]);
-        if (posX <= 300 && posY >= 415) {
-            //cash deposit
-            log.info("pressed cash deposit");
-        } else if (posX <= 300 && posY >= 345) {
-            //cash withdrawal
-            log.info("pressed cash withdrawal");
-        } else if (posX <= 300 && posY >= 275) {
-            //cet account
-            log.info("pressed get account");
-        } else if (posX >= 340 && posX <= 640 && posY >= 415) {
-            //log out
-            log.info("pressed logout");
-        } else if (posX >= 340 && posX <= 640 && posY >= 345) {
-            //balance enquiry
-            log.info("pressed balance enquiry");
-        } else if (posX >= 340 && posX <= 640 && posY >= 275) {
-            //cash transaction
-            log.info("pressed cash transaction");
-        }
     } // processMouseClicked
 
     //BAMS functions
     static boolean Login(BAMSHandler bams, String cardNo, String pin) throws BAMSInvalidReplyException, IOException {
         String cred = bams.login(cardNo, pin);
-        if (cred == "cred-1") {
+        if(cred == "cred-1"){
             return true;
-        } else {
+        }else{
             return false;
         }
 
