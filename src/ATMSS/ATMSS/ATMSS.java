@@ -59,8 +59,8 @@ public class ATMSS extends AppThread {
         atmState.ejectCard();
     }
 
-    public void insertPin(){
-        atmState.insertPin();
+    public void insertPin(String CardNum, String Pin){
+        atmState.insertPin(CardNum, Pin);
     }
 
     public ATMState getYesCardState(){return hasCard;}
@@ -84,9 +84,6 @@ public class ATMSS extends AppThread {
         cashDepositCollectorMBox = appKickstarter.getThread("CashDepositCollectorHandler").getMBox();
 
 
-
-
-
         for (boolean quit = false; !quit; ) {
             Msg msg = mbox.receive();
 
@@ -105,13 +102,16 @@ public class ATMSS extends AppThread {
 
                 case CR_CardInserted:
                     this.insertCard();
+                    cardNo = msg.getDetails();
                     log.info("CardInserted: " + msg.getDetails());
                     break;
 
                 case CR_EjectCard:
                     this.ejectCard();
+                    cardNo = "";
                     log.info("CardEjected: " + msg.getDetails());
                     break;
+
                 case CR_CardRemoved:
                     this.ejectCard();
                     log.info("CardRemoved: " + msg.getDetails());
@@ -151,26 +151,18 @@ public class ATMSS extends AppThread {
             String key = msg.getDetails();
             switch(key) {
                 case "0": case "1": case "2": case "3": case "4": case "5": case "6": case "7": case "8": case "9":
-                    pin += key;
+                    System.out.println("Key Pressed:" + key);
+                    pin = pin + key;
+                    System.out.println("Pin:" + pin);
                     break;
-                case "CANCEL":
+                case "Cancel":
                     pin = "";
                     cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, "Card eject"));
                     break;
-                case "ENTER":
-                    /*
-                    try{
-                        if(Login(bams, cardNo, pin)){
-                            atmState.insertPin();
-                        }
-                    }catch(Exception e){
-                        System.out.println("TestBAMSHandler: Exception caught: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                    */
-                    System.out.println(pin);
+                case "Enter":
+                    this.insertPin(cardNo, pin);
                     break;
-                case "ERASE":
+                case "Erase":
                     pin = pin.substring(0, pin.length()-1);
                     break;
                 default:

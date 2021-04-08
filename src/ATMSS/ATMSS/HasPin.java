@@ -24,7 +24,8 @@ public class HasPin implements ATMState {
     }
 
     @Override
-    public void insertPin() {
+    public void insertPin(String CardNum, String Pin) {
         System.out.println("Already Logined!");
+
     }
 }
