@@ -105,11 +105,17 @@ public class ATMSS extends AppThread {
 
                 case CR_CardInserted:
                     this.insertCard();
-                    //atmState.insertCard();
-                    //cardNo = msg.getDetails();
                     log.info("CardInserted: " + msg.getDetails());
                     break;
 
+                case CR_EjectCard:
+                    this.ejectCard();
+                    log.info("CardEjected: " + msg.getDetails());
+                    break;
+                case CR_CardRemoved:
+                    this.ejectCard();
+                    log.info("CardRemoved: " + msg.getDetails());
+                    break;
                 case TimesUp:
                     Timer.setTimer(id, mbox, pollingTime);
                     log.info("Poll: " + msg.getDetails());
@@ -162,7 +168,7 @@ public class ATMSS extends AppThread {
                         e.printStackTrace();
                     }
                     */
-                    System.out.println(key);
+                    System.out.println(pin);
                     break;
                 case "ERASE":
                     pin = pin.substring(0, pin.length()-1);

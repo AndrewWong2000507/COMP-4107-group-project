@@ -13,11 +13,11 @@ public class NoCard implements ATMState {
 
     @Override
     public void ejectCard() {
-        System.out.println("No Card in the Card Reader!");
+        System.out.println("NoCard,no card in the Card Reader!");
     }
 
     @Override
     public void insertPin() {
-        System.out.println("No Card in the Card Reader!");
+        System.out.println("NoCard,no card in the Card Reader!");
     }
 }

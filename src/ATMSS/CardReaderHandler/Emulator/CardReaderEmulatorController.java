@@ -66,11 +66,12 @@ public class CardReaderEmulatorController {
                 }
                 break;
 
+
             case "Remove Card":
-                if (cardStatusField.getText().compareTo("Card Ejected") == 0) {
+                if (cardStatusField.getText().compareTo("Card Inserted, Please Input your Pin") == 0) {
                     cardReaderTextArea.appendText("Removing card\n");
                     cardReaderMBox.send(new Msg(id, cardReaderMBox, Msg.Type.CR_CardRemoved, cardNumField.getText()));
-                    cardStatusField.setText("No Card");
+                    //cardStatusField.setText("No Card");
                 }
                 break;
 
