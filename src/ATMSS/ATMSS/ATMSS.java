@@ -5,6 +5,7 @@ import AppKickstarter.misc.*;
 import AppKickstarter.timer.Timer;
 
 
+
 //======================================================================
 // ATMSS
 public class ATMSS extends AppThread {
@@ -17,13 +18,44 @@ public class ATMSS extends AppThread {
     private MBox buzzerMBox;
     private MBox cashDepositCollectorMBox;
 
+    ATMState hasCard;
+    ATMState noCard;
+    ATMState hasCorrectPin;
+
+    ATMState atmState;
+    boolean correctPinEntered = false;
+
     //------------------------------------------------------------
     // ATMSS
     public ATMSS(String id, AppKickstarter appKickstarter) throws Exception {
         super(id, appKickstarter);
         pollingTime = Integer.parseInt(appKickstarter.getProperty("ATMSS.PollingTime"));
+
+        hasCard = new HasCard(this);
+        noCard = new NoCard(this);
+        hasCorrectPin = new HasPin(this);
+
     } // ATMSS
 
+    //Change ATM state
+    void setATMState(ATMState newATMState){
+        atmState = newATMState;
+    }
+
+    public void insertCard(){
+        atmState.insertCard();
+    }
+    public void ejectCard(){
+        atmState.ejectCard();
+    }
+    public void insertPin(int pinEntered){
+        atmState.insertPin(pinEntered);
+    }
+    public ATMState getYesCardState(){return hasCard;}
+    public ATMState getNoCardState(){return noCard;}
+    public ATMState getHasPin(){return hasCorrectPin;}
+
+    //end Change ATM state
 
     //------------------------------------------------------------
     // run
@@ -39,6 +71,8 @@ public class ATMSS extends AppThread {
         buzzerMBox = appKickstarter.getThread("BuzzerHandler").getMBox();
         cashDepositCollectorMBox = appKickstarter.getThread("CashDepositCollectorHandler").getMBox();
 
+        atmState.ejectCard();
+
         for (boolean quit = false; !quit; ) {
             Msg msg = mbox.receive();
 
@@ -49,12 +83,14 @@ public class ATMSS extends AppThread {
                     log.info("MouseCLicked: " + msg.getDetails());
                     processMouseClicked(msg);
                     break;
+
                 case KP_KeyPressed:
                     log.info("KeyPressed: " + msg.getDetails());
                     processKeyPressed(msg);
                     break;
 
                 case CR_CardInserted:
+                    atmState.insertCard();
                     log.info("CardInserted: " + msg.getDetails());
                     break;
 
@@ -89,17 +125,65 @@ public class ATMSS extends AppThread {
     //------------------------------------------------------------
     // processKeyPressed
     private void processKeyPressed(Msg msg) {
-        // *** The following is an example only!! ***
-        if (msg.getDetails().compareToIgnoreCase("Cancel") == 0) {
-            cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, ""));
-        } else if (msg.getDetails().compareToIgnoreCase("1") == 0) {
-            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
-        } else if (msg.getDetails().compareToIgnoreCase("2") == 0) {
-            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "MainMenu"));
-        } else if (msg.getDetails().compareToIgnoreCase("3") == 0) {
-            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "Confirmation"));
+        String pin = "";
+        if (atmState == hasCard) {
+            String key = msg.getDetails();
+
+            switch(key) {
+                case "0":
+                    pin += key;
+                    break;
+                case "1":
+                    pin += key;
+                    break;
+                case "2":
+                    pin += key;
+                    break;
+                case "3":
+                    pin += key;
+                    break;
+                case "4":
+                    pin += key;
+                    break;
+                case "5":
+                    pin += key;
+                    break;
+                case "6":
+                    pin += key;
+                    break;
+                case "7":
+                    pin += key;
+                    break;
+                case "8":
+                    pin += key;
+                    break;
+                case "9":
+                    pin += key;
+                    break;
+                case "CANCEL":
+                    pin = "";
+                    break;
+                case "ENTER":
+                    break;
+                case "ERASE":
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            if (msg.getDetails().compareToIgnoreCase("Cancel") == 0) {
+                cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, ""));
+            } else if (msg.getDetails().compareToIgnoreCase("1") == 0) {
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
+            } else if (msg.getDetails().compareToIgnoreCase("2") == 0) {
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "MainMenu"));
+            } else if (msg.getDetails().compareToIgnoreCase("3") == 0) {
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "Confirmation"));
+            }
         }
-    } // processKeyPressed
+        // *** The following is an example only!! ***
+    }
+     // processKeyPressed
 
 
     //------------------------------------------------------------
