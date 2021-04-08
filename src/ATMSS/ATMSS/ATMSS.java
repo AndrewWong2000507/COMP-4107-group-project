@@ -24,10 +24,10 @@ public class ATMSS extends AppThread {
     ATMState hasCard;
     ATMState noCard;
     ATMState hasCorrectPin;
+
     private String pin = "";
     public String cardNo = "";
-    String urlPrefix = "http://cslinux0.comp.hkbu.edu.hk/comp4107_20-21_grp12/BAMS.php";
-    BAMSHandler bams = new BAMSHandler(urlPrefix);
+    //Create BAMSHandler
 
     ATMState atmState;
     boolean correctPinEntered = false;
@@ -42,6 +42,8 @@ public class ATMSS extends AppThread {
         noCard = new NoCard(this);
         hasCorrectPin = new HasPin(this);
 
+        atmState = noCard;
+
     } // ATMSS
 
     //Change ATM state
@@ -49,15 +51,18 @@ public class ATMSS extends AppThread {
         atmState = newATMState;
     }
 
-    public void insertCard(){
+    public void insertCard() {
         atmState.insertCard();
     }
-    public void ejectCard(){
+
+    public void ejectCard() {
         atmState.ejectCard();
     }
-    public void insertPin(int pinEntered){
+
+    public void insertPin(){
         atmState.insertPin();
     }
+
     public ATMState getYesCardState(){return hasCard;}
     public ATMState getNoCardState(){return noCard;}
     public ATMState getHasPin(){return hasCorrectPin;}
@@ -78,8 +83,7 @@ public class ATMSS extends AppThread {
         buzzerMBox = appKickstarter.getThread("BuzzerHandler").getMBox();
         cashDepositCollectorMBox = appKickstarter.getThread("CashDepositCollectorHandler").getMBox();
 
-        atmState.ejectCard();
-        //Create BAMSHandler
+
 
 
 
@@ -100,8 +104,9 @@ public class ATMSS extends AppThread {
                     break;
 
                 case CR_CardInserted:
-                    atmState.insertCard();
-                    cardNo = msg.getDetails();
+                    this.insertCard();
+                    //atmState.insertCard();
+                    //cardNo = msg.getDetails();
                     log.info("CardInserted: " + msg.getDetails());
                     break;
 
@@ -136,18 +141,18 @@ public class ATMSS extends AppThread {
     //------------------------------------------------------------
     // processKeyPressed
     private void processKeyPressed(Msg msg) {
-
         if (atmState == hasCard) {
             String key = msg.getDetails();
-
             switch(key) {
                 case "0": case "1": case "2": case "3": case "4": case "5": case "6": case "7": case "8": case "9":
                     pin += key;
                     break;
                 case "CANCEL":
                     pin = "";
+                    cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, "Card eject"));
                     break;
                 case "ENTER":
+                    /*
                     try{
                         if(Login(bams, cardNo, pin)){
                             atmState.insertPin();
@@ -156,6 +161,8 @@ public class ATMSS extends AppThread {
                         System.out.println("TestBAMSHandler: Exception caught: " + e.getMessage());
                         e.printStackTrace();
                     }
+                    */
+                    System.out.println(key);
                     break;
                 case "ERASE":
                     pin = pin.substring(0, pin.length()-1);
