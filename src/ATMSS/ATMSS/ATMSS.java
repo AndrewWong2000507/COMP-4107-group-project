@@ -1,9 +1,12 @@
 package ATMSS.ATMSS;
 
+import ATMSS.BAMSHandler.BAMSHandler;
+import ATMSS.BAMSHandler.BAMSInvalidReplyException;
 import AppKickstarter.AppKickstarter;
 import AppKickstarter.misc.*;
 import AppKickstarter.timer.Timer;
 
+import java.io.IOException;
 
 
 //======================================================================
@@ -21,6 +24,10 @@ public class ATMSS extends AppThread {
     ATMState hasCard;
     ATMState noCard;
     ATMState hasCorrectPin;
+    private String pin = "";
+    public String cardNo = "";
+    String urlPrefix = "http://cslinux0.comp.hkbu.edu.hk/comp4107_20-21_grp12/BAMS.php";
+    BAMSHandler bams = new BAMSHandler(urlPrefix);
 
     ATMState atmState;
     boolean correctPinEntered = false;
@@ -49,7 +56,7 @@ public class ATMSS extends AppThread {
         atmState.ejectCard();
     }
     public void insertPin(int pinEntered){
-        atmState.insertPin(pinEntered);
+        atmState.insertPin();
     }
     public ATMState getYesCardState(){return hasCard;}
     public ATMState getNoCardState(){return noCard;}
@@ -72,6 +79,9 @@ public class ATMSS extends AppThread {
         cashDepositCollectorMBox = appKickstarter.getThread("CashDepositCollectorHandler").getMBox();
 
         atmState.ejectCard();
+        //Create BAMSHandler
+
+
 
         for (boolean quit = false; !quit; ) {
             Msg msg = mbox.receive();
@@ -91,6 +101,7 @@ public class ATMSS extends AppThread {
 
                 case CR_CardInserted:
                     atmState.insertCard();
+                    cardNo = msg.getDetails();
                     log.info("CardInserted: " + msg.getDetails());
                     break;
 
@@ -125,7 +136,7 @@ public class ATMSS extends AppThread {
     //------------------------------------------------------------
     // processKeyPressed
     private void processKeyPressed(Msg msg) {
-        String pin = "";
+
         if (atmState == hasCard) {
             String key = msg.getDetails();
 
@@ -137,6 +148,14 @@ public class ATMSS extends AppThread {
                     pin = "";
                     break;
                 case "ENTER":
+                    try{
+                        if(Login(bams, cardNo, pin)){
+                            atmState.insertPin();
+                        }
+                    }catch(Exception e){
+                        System.out.println("TestBAMSHandler: Exception caught: " + e.getMessage());
+                        e.printStackTrace();
+                    }
                     break;
                 case "ERASE":
                     pin = pin.substring(0, pin.length()-1);
@@ -165,4 +184,17 @@ public class ATMSS extends AppThread {
     private void processMouseClicked(Msg msg) {
         // *** process mouse click here!!! ***
     } // processMouseClicked
+
+    //BAMS functions
+    static boolean Login(BAMSHandler bams, String cardNo, String pin) throws BAMSInvalidReplyException, IOException {
+        String cred = bams.login(cardNo, pin);
+        if(cred == "cred-1"){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
 } // CardReaderHandler

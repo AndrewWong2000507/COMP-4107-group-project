@@ -19,7 +19,7 @@ public class HasCard implements ATMState {
     }
 
     @Override
-    public void insertPin(int pinEntered) {
+    public void insertPin() {
         atmMachine.correctPinEntered = true;
         atmMachine.setATMState(atmMachine.getHasPin());
     }

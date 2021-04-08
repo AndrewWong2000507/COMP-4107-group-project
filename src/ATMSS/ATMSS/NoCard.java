@@ -17,7 +17,7 @@ public class NoCard implements ATMState {
     }
 
     @Override
-    public void insertPin(int pinEntered) {
+    public void insertPin() {
 
     }
 }

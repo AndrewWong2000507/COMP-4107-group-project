@@ -18,7 +18,7 @@ public class HasPin implements ATMState {
     }
 
     @Override
-    public void insertPin(int pinEntered) {
+    public void insertPin() {
 
     }
 }
