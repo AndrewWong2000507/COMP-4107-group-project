@@ -21,14 +21,17 @@ public class CardReaderHandler extends HWHandler {
         switch (msg.getType()) {
             case CR_CardInserted:
                 atmss.send(new Msg(id, mbox, Msg.Type.CR_CardInserted, msg.getDetails()));
+                //handleCardInsert();
                 break;
 
             case CR_EjectCard:
-                handleCardEject();
+                atmss.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, msg.getDetails()));
+                //handleCardEject();
                 break;
 
             case CR_CardRemoved:
-                handleCardRemove();
+                atmss.send(new Msg(id, mbox, Msg.Type.CR_CardRemoved, msg.getDetails()));
+                //handleCardRemove();
                 break;
 
             default:
@@ -39,9 +42,7 @@ public class CardReaderHandler extends HWHandler {
 
     //------------------------------------------------------------
     // handleCardInsert
-    protected void handleCardInsert() {
-	log.info(id + ": card inserted");
-    } // handleCardInsert
+    protected void handleCardInsert() { log.info(id + ": card inserted"); } // handleCardInsert
 
 
     //------------------------------------------------------------

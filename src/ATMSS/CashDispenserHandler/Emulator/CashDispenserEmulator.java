@@ -42,4 +42,8 @@ public class CashDispenserEmulator extends CashDispenserHandler {
         });
         myStage.show();
     }
+
+    public void reloadStage() throws Exception {
+
+    }
 }
