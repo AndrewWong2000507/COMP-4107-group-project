@@ -130,34 +130,7 @@ public class ATMSS extends AppThread {
             String key = msg.getDetails();
 
             switch(key) {
-                case "0":
-                    pin += key;
-                    break;
-                case "1":
-                    pin += key;
-                    break;
-                case "2":
-                    pin += key;
-                    break;
-                case "3":
-                    pin += key;
-                    break;
-                case "4":
-                    pin += key;
-                    break;
-                case "5":
-                    pin += key;
-                    break;
-                case "6":
-                    pin += key;
-                    break;
-                case "7":
-                    pin += key;
-                    break;
-                case "8":
-                    pin += key;
-                    break;
-                case "9":
+                case "0": case "1": case "2": case "3": case "4": case "5": case "6": case "7": case "8": case "9":
                     pin += key;
                     break;
                 case "CANCEL":
@@ -166,6 +139,7 @@ public class ATMSS extends AppThread {
                 case "ENTER":
                     break;
                 case "ERASE":
+                    pin = pin.substring(0, pin.length()-1);
                     break;
                 default:
                     break;
