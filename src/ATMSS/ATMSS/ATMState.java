@@ -4,5 +4,5 @@ public interface ATMState {
 
     void insertCard();
     void ejectCard();
-    void insertPin();
+    void insertPin(String CardNum, String Pin);
 }

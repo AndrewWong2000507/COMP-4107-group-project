@@ -17,7 +17,7 @@ public class NoCard implements ATMState {
     }
 
     @Override
-    public void insertPin() {
+    public void insertPin(String CardNum, String Pin) {
         System.out.println("NoCard,no card in the Card Reader!");
     }
 }
