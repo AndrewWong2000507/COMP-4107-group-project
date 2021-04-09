@@ -27,6 +27,7 @@ public class ATMSS extends AppThread {
 
     private String pin = "";
     public String cardNo = "";
+    public int pinCounter = 0;
     //Create BAMSHandler
 
     ATMState atmState;
@@ -49,6 +50,15 @@ public class ATMSS extends AppThread {
     //Change ATM state
     void setATMState(ATMState newATMState){
         atmState = newATMState;
+    }
+
+    public void resetCount(){
+        pinCounter = 0;
+    }
+    public void resetPin(){ pin = "";}
+    public void resetAll(){
+        resetCount();
+        resetPin();
     }
 
     public void insertCard() {
@@ -160,7 +170,12 @@ public class ATMSS extends AppThread {
                     cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, "Card eject"));
                     break;
                 case "Enter":
-                    this.insertPin(cardNo, pin);
+                    pinCounter++;
+                    if(pinCounter<=3){
+                        this.insertPin(cardNo, pin);
+                    }else{
+                        cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_CardRemoved, "Card Locked"));
+                    }
                     break;
                 case "Erase":
                     pin = pin.substring(0, pin.length()-1);
@@ -189,17 +204,6 @@ public class ATMSS extends AppThread {
     private void processMouseClicked(Msg msg) {
         // *** process mouse click here!!! ***
     } // processMouseClicked
-
-    //BAMS functions
-    static boolean Login(BAMSHandler bams, String cardNo, String pin) throws BAMSInvalidReplyException, IOException {
-        String cred = bams.login(cardNo, pin);
-        if(cred == "cred-1"){
-            return true;
-        }else{
-            return false;
-        }
-
-    }
 
 
 } // CardReaderHandler
