@@ -206,6 +206,7 @@ public class ATMSS extends AppThread {
     // processMouseClicked
     private void processMouseClicked (Msg msg){
         // *** process mouse click here!!! ***
+
         String[] pos = msg.getDetails().trim().split("\\s+");
         int posX = Integer.parseInt(pos[0]);
         int posY = Integer.parseInt(pos[1]);
@@ -228,6 +229,7 @@ public class ATMSS extends AppThread {
             //cash transaction
             log.info("pressed cash transaction");
         }
+
     } // processMouseClicked
 
 
