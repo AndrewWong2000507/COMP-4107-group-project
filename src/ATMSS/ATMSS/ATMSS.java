@@ -1,12 +1,8 @@
 package ATMSS.ATMSS;
 
-import ATMSS.BAMSHandler.BAMSHandler;
-import ATMSS.BAMSHandler.BAMSInvalidReplyException;
 import AppKickstarter.AppKickstarter;
 import AppKickstarter.misc.*;
 import AppKickstarter.timer.Timer;
-
-import java.io.IOException;
 
 
 //======================================================================
@@ -24,10 +20,12 @@ public class ATMSS extends AppThread {
     ATMState hasCard;
     ATMState noCard;
     ATMState hasCorrectPin;
+    ATMState unAvailable;
 
     private String pin = "";
     public String cardNo = "";
     public int pinCounter = 0;
+    boolean outOfCash = false;
     //Create BAMSHandler
 
     ATMState atmState;
@@ -42,7 +40,7 @@ public class ATMSS extends AppThread {
         hasCard = new HasCard(this);
         noCard = new NoCard(this);
         hasCorrectPin = new HasPin(this);
-
+        unAvailable = new Unavailable(this);
         atmState = noCard;
 
     } // ATMSS
@@ -76,6 +74,7 @@ public class ATMSS extends AppThread {
     public ATMState getYesCardState(){return hasCard;}
     public ATMState getNoCardState(){return noCard;}
     public ATMState getHasPin(){return hasCorrectPin;}
+    public ATMState getUnAvailable(){return unAvailable;}
 
     //end Change ATM state
 
@@ -95,9 +94,13 @@ public class ATMSS extends AppThread {
 
 
         for (boolean quit = false; !quit; ) {
+            if(outOfCash){
+                atmState = unAvailable;
+            }
             Msg msg = mbox.receive();
 
             log.fine(id + ": message received: [" + msg + "].");
+
 
             switch (msg.getType()) {
                 case TD_MouseClicked:
