@@ -199,13 +199,37 @@ public class ATMSS extends AppThread {
         }
         // *** The following is an example only!! ***
     }
-     // processKeyPressed
+    // processKeyPressed
 
 
     //------------------------------------------------------------
     // processMouseClicked
-    private void processMouseClicked(Msg msg) {
+    private void processMouseClicked (Msg msg){
         // *** process mouse click here!!! ***
+
+        String[] pos = msg.getDetails().trim().split("\\s+");
+        int posX = Integer.parseInt(pos[0]);
+        int posY = Integer.parseInt(pos[1]);
+        if (posX <= 300 && posY >= 415) {
+            //cash deposit
+            log.info("pressed cash deposit");
+        } else if (posX <= 300 && posY >= 345) {
+            //cash withdrawal
+            log.info("pressed cash withdrawal");
+        } else if (posX <= 300 && posY >= 275) {
+            //cet account
+            log.info("pressed get account");
+        } else if (posX >= 340 && posX <= 640 && posY >= 415) {
+            //log out
+            log.info("pressed logout");
+        } else if (posX >= 340 && posX <= 640 && posY >= 345) {
+            //balance enquiry
+            log.info("pressed balance enquiry");
+        } else if (posX >= 340 && posX <= 640 && posY >= 275) {
+            //cash transaction
+            log.info("pressed cash transaction");
+        }
+
     } // processMouseClicked
 
 

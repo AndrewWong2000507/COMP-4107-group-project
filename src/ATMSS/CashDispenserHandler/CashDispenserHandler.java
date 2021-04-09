@@ -13,6 +13,8 @@ public class CashDispenserHandler extends HWHandler {
 
     @Override
     protected void processMsg(Msg msg) {
-        super.processMsg(msg);
+        switch (msg.getDetails()){
+
+        }
     }
 }

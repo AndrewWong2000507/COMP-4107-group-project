@@ -3,19 +3,68 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/8.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ATMSS.TouchDisplayHandler.Emulator.TouchDisplayEmulatorController">
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0"
+            prefWidth="680.0" xmlns="http://javafx.com/javafx/8.0" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ATMSS.TouchDisplayHandler.Emulator.TouchDisplayEmulatorController">
     <children>
-	<AnchorPane prefHeight="480.0" prefWidth="640.0" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="20">
-	    <children>
-		<Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE" width="300.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" />
-		<Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE" width="300.0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" />
-		<Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE" width="300.0" AnchorPane.bottomAnchor="70" AnchorPane.leftAnchor="0" />
-		<Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE" width="300.0" AnchorPane.bottomAnchor="70" AnchorPane.rightAnchor="0" />
-		<Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE" width="300.0" AnchorPane.bottomAnchor="140" AnchorPane.leftAnchor="0" />
-		<Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE" width="300.0" AnchorPane.bottomAnchor="140" AnchorPane.rightAnchor="0" />
-		<Rectangle arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="480.0" onMouseClicked="#td_mouseClick" stroke="BLACK" strokeType="OUTSIDE" width="640" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
-	    </children>
-	</AnchorPane>
+        <AnchorPane prefHeight="480.0" prefWidth="640.0" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="20">
+            <children>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE"
+                           width="300.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"/>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE"
+                           width="300.0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="15"/>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE"
+                           width="300.0" AnchorPane.bottomAnchor="70" AnchorPane.leftAnchor="0"/>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE"
+                           width="300.0" AnchorPane.bottomAnchor="70" AnchorPane.rightAnchor="15"/>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE"
+                           width="300.0" AnchorPane.bottomAnchor="140" AnchorPane.leftAnchor="0"/>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE"
+                           width="300.0" AnchorPane.bottomAnchor="140" AnchorPane.rightAnchor="15"/>
+                <Text fx:id="TD_CashDepositButtonText" text="Cash Deposit" AnchorPane.bottomAnchor="18"
+                      AnchorPane.leftAnchor="73" AnchorPane.rightAnchor="413" AnchorPane.topAnchor="427">
+                    <font>
+                        <Font size="29"/>
+                    </font>
+                </Text>
+                <Text fx:id="TD_CashTransactionButtonText" text="CashTransaction" AnchorPane.bottomAnchor="156"
+                      AnchorPane.leftAnchor="382" AnchorPane.rightAnchor="41" AnchorPane.topAnchor="284">
+                    <font>
+                        <Font size="29"/>
+                    </font>
+                </Text>
+                <Text fx:id="TD_GetAccountButtonText" text="Get Account" AnchorPane.bottomAnchor="156"
+                      AnchorPane.leftAnchor="71" AnchorPane.rightAnchor="411" AnchorPane.topAnchor="284">
+                    <font>
+                        <Font size="29"/>
+                    </font>
+                </Text>
+                <Text fx:id="TD_BalanceEnquiryButtonText" text="Balance Enquiry" AnchorPane.bottomAnchor="83"
+                      AnchorPane.leftAnchor="389" AnchorPane.rightAnchor="48" AnchorPane.topAnchor="354">
+                    <font>
+                        <Font size="29"/>
+                    </font>
+                </Text>
+                <Text fx:id="TD_CashWithdrawalButtonText" text="Cash Withdrawal" AnchorPane.bottomAnchor="85"
+                      AnchorPane.leftAnchor="43" AnchorPane.rightAnchor="382" AnchorPane.topAnchor="354">
+                    <font>
+                        <Font size="29"/>
+                    </font>
+                </Text>
+                <Text fx:id="TD_LogOutButtonText" text="Log Out" AnchorPane.bottomAnchor="14"
+                      AnchorPane.leftAnchor="423" AnchorPane.rightAnchor="94" AnchorPane.topAnchor="423">
+                    <font>
+                        <Font size="29"/>
+                    </font>
+                </Text>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="480.0"
+                           onMouseClicked="#td_mouseClick" stroke="BLACK" strokeType="OUTSIDE" width="640"
+                           AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0"
+                           AnchorPane.rightAnchor="0"/>
+            </children>
+        </AnchorPane>
     </children>
 </AnchorPane>
 

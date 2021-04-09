@@ -94,5 +94,10 @@ public class Msg {
 	/** Card removed */			CR_CardRemoved,
 	/** Eject card */			CR_EjectCard,
 	/** Key pressed */			KP_KeyPressed,
+        /** Cash Dispense */  CD_CashDispense,
+        /** Cash deposited  */  CDC_CashDeposited,
+        /** Print Advice */  AP_Print,
+        /** Advice Collected */  AP_Collected,
+        /** Ask PIN on touch screen */  TD_AskPIN,
     } // Type
 } // Msg
