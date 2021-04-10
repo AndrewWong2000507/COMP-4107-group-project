@@ -8,10 +8,12 @@ import AppKickstarter.timer.Timer;
 
 import java.io.IOException;
 
+import java.util.*;
 
 //======================================================================
 // ATMSS
 public class ATMSS extends AppThread {
+    public String[] acctList;
     private int pollingTime;
     private MBox cardReaderMBox;
     private MBox keypadMBox;
@@ -62,7 +64,10 @@ public class ATMSS extends AppThread {
         atmState = newATMState;
     }
 
-    public void resetCount() {
+    public void resetAccList(){
+        acctList = new String[4];
+    }
+    public void resetCount(){
         pinCounter = 0;
     }
 
@@ -73,6 +78,7 @@ public class ATMSS extends AppThread {
     public void resetAll() {
         resetCount();
         resetPin();
+        resetAccList();
     }
 
     public void insertCard() {
@@ -188,7 +194,6 @@ public class ATMSS extends AppThread {
     //------------------------------------------------------------
     // processKeyPressed
     private void processKeyPressed(Msg msg) {
-        //card inserted
         if (atmState == hasCard) {
             String key = msg.getDetails();
             switch (key) {

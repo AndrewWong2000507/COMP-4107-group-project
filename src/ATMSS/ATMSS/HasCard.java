@@ -39,6 +39,12 @@ public class HasCard implements ATMState {
             e.printStackTrace();
         }
         if(session){
+            try{
+                atmMachine.acctList = getAcc(bams, CardNum);
+            }catch(Exception e){
+                System.out.println("TestBAMSHandler: Exception caught: " + e.getMessage());
+                e.printStackTrace();
+            }
             atmMachine.correctPinEntered = true;
             atmMachine.setATMState(atmMachine.getHasPin());
             atmMachine.resetCount();
@@ -46,7 +52,7 @@ public class HasCard implements ATMState {
         }
     }
 
-    static boolean login(BAMSHandler bams, String cardNo, String Pin) throws BAMSInvalidReplyException, IOException {
+    boolean login(BAMSHandler bams, String cardNo, String Pin) throws BAMSInvalidReplyException, IOException {
         String cred = bams.login(cardNo, Pin);
         System.out.println("cred: " + cred);
         if(cred.equals("cred-1")){
@@ -55,4 +61,12 @@ public class HasCard implements ATMState {
             return false;
         }
     } // testLogin
+    String[] getAcc(BAMSHandler bams, String cardNo) throws BAMSInvalidReplyException, IOException {
+        String bamsReply = "";
+        bamsReply = bams.getAccounts(cardNo, "cred-1");
+        String[] accts = bamsReply.split(" ");
+        System.out.println(accts[0]);
+        return accts;
+    }
+
 }
