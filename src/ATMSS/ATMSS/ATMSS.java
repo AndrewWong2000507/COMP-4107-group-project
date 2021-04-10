@@ -30,7 +30,7 @@ public class ATMSS extends AppThread {
     public String cardNo = "";
     public int pinCounter = 0;
     boolean outOfCash = false;
-    private String userInput;
+    private String userInput = "";
     private String mode = "";
     private String[] accNo = {"0", "1"}; //temp
 
@@ -230,6 +230,7 @@ public class ATMSS extends AppThread {
             }
             //after login
         } else if (atmState == hasCorrectPin) {
+            log.info("ATMSS state: has correct PIN");
             String key = msg.getDetails();
             switch (key) {
                 case "0":
@@ -254,6 +255,7 @@ public class ATMSS extends AppThread {
                     switch (mode) {
                         case "cash withdrawal":
                             //just some template
+                            log.info("ATMSS: user Input " + userInput);
                             try {
                                 if (Double.parseDouble(userInput) % 100 == 0 && Double.parseDouble(userInput) > 0) {
                                     //only can get $100,$500 and $1000
@@ -267,6 +269,7 @@ public class ATMSS extends AppThread {
                             break;
                         case "cash transaction":
                             //just some template
+                            log.info("ATMSS: user Input " + userInput);
                             try {
                                 if (Double.parseDouble(userInput) > 0) {
                                     bamsHandler.transfer(cardNo, "", accNo[0], accNo[1], userInput);
@@ -280,6 +283,7 @@ public class ATMSS extends AppThread {
                             }
                             break;
                         case "cash deposit":
+                            log.info("ATMSS: user Input " + userInput);
                             try {
                                 if (Double.parseDouble(userInput) > 0) {
                                     bamsHandler.deposit(cardNo, accNo[0], "", userInput);
@@ -335,10 +339,12 @@ public class ATMSS extends AppThread {
             //cash deposit
             log.info("pressed cash deposit");
             mode = "cash deposit";
+            log.info("ATM mode : " + mode);
         } else if (posX <= 300 && posY >= 345) {
             //cash withdrawal
             log.info("pressed cash withdrawal");
             mode = "cash withdrawal";
+            log.info("ATM mode : " + mode);
         } else if (posX <= 300 && posY >= 275) {
             //cet account
             log.info("pressed get account");
@@ -352,6 +358,7 @@ public class ATMSS extends AppThread {
             //cash transaction
             log.info("pressed cash transaction");
             mode = "cash transaction";
+            log.info("ATM mode : " + mode);
         }
 
     } // processMouseClicked
