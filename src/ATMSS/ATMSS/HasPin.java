@@ -18,6 +18,8 @@ public class HasPin implements ATMState {
 
     @Override
     public void ejectCard() {
+        atmMachine.resetAll();
+        System.out.println("Log out");
         atmMachine.correctPinEntered = false;
         atmMachine.setATMState(atmMachine.getNoCardState());
     }
@@ -25,6 +27,7 @@ public class HasPin implements ATMState {
     @Override
     public void insertPin(String CardNum, String Pin) {
         System.out.println("Already Logined!");
-
     }
+
+
 }

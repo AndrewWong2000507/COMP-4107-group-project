@@ -1,17 +1,15 @@
 package ATMSS.ATMSS;
 
-import ATMSS.BAMSHandler.BAMSHandler;
-import ATMSS.BAMSHandler.BAMSInvalidReplyException;
 import AppKickstarter.AppKickstarter;
 import AppKickstarter.misc.*;
 import AppKickstarter.timer.Timer;
 
-import java.io.IOException;
-
+import java.util.*;
 
 //======================================================================
 // ATMSS
 public class ATMSS extends AppThread {
+    public String[] acctList;
     private int pollingTime;
     private MBox cardReaderMBox;
     private MBox keypadMBox;
@@ -24,9 +22,12 @@ public class ATMSS extends AppThread {
     ATMState hasCard;
     ATMState noCard;
     ATMState hasCorrectPin;
+    ATMState unAvailable;
 
     private String pin = "";
     public String cardNo = "";
+    public int pinCounter = 0;
+    boolean outOfCash = false;
     //Create BAMSHandler
 
     ATMState atmState;
@@ -41,7 +42,7 @@ public class ATMSS extends AppThread {
         hasCard = new HasCard(this);
         noCard = new NoCard(this);
         hasCorrectPin = new HasPin(this);
-
+        unAvailable = new Unavailable(this);
         atmState = noCard;
 
     } // ATMSS
@@ -49,6 +50,19 @@ public class ATMSS extends AppThread {
     //Change ATM state
     void setATMState(ATMState newATMState){
         atmState = newATMState;
+    }
+
+    public void resetAccList(){
+        acctList = new String[4];
+    }
+    public void resetCount(){
+        pinCounter = 0;
+    }
+    public void resetPin(){ pin = "";}
+    public void resetAll(){
+        resetCount();
+        resetPin();
+        resetAccList();
     }
 
     public void insertCard() {
@@ -66,6 +80,7 @@ public class ATMSS extends AppThread {
     public ATMState getYesCardState(){return hasCard;}
     public ATMState getNoCardState(){return noCard;}
     public ATMState getHasPin(){return hasCorrectPin;}
+    public ATMState getUnAvailable(){return unAvailable;}
 
     //end Change ATM state
 
@@ -85,9 +100,13 @@ public class ATMSS extends AppThread {
 
 
         for (boolean quit = false; !quit; ) {
+            if(outOfCash){
+                atmState = unAvailable;
+            }
             Msg msg = mbox.receive();
 
             log.fine(id + ": message received: [" + msg + "].");
+
 
             switch (msg.getType()) {
                 case TD_MouseClicked:
@@ -160,7 +179,12 @@ public class ATMSS extends AppThread {
                     cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, "Card eject"));
                     break;
                 case "Enter":
-                    this.insertPin(cardNo, pin);
+                    pinCounter++;
+                    if(pinCounter<=3){
+                        this.insertPin(cardNo, pin);
+                    }else{
+                        cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_CardRemoved, "Card Locked"));
+                    }
                     break;
                 case "Erase":
                     pin = pin.substring(0, pin.length()-1);
@@ -188,6 +212,7 @@ public class ATMSS extends AppThread {
     // processMouseClicked
     private void processMouseClicked (Msg msg){
         // *** process mouse click here!!! ***
+
         String[] pos = msg.getDetails().trim().split("\\s+");
         int posX = Integer.parseInt(pos[0]);
         int posY = Integer.parseInt(pos[1]);
@@ -210,18 +235,8 @@ public class ATMSS extends AppThread {
             //cash transaction
             log.info("pressed cash transaction");
         }
+
     } // processMouseClicked
-
-    //BAMS functions
-    static boolean Login(BAMSHandler bams, String cardNo, String pin) throws BAMSInvalidReplyException, IOException {
-        String cred = bams.login(cardNo, pin);
-        if(cred == "cred-1"){
-            return true;
-        }else{
-            return false;
-        }
-
-    }
 
 
 } // CardReaderHandler

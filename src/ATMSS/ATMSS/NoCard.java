@@ -8,6 +8,7 @@ public class NoCard implements ATMState {
 
     @Override
     public void insertCard() {
+        atmMachine.resetCount();
         atmMachine.setATMState(atmMachine.getYesCardState());
     }
 
