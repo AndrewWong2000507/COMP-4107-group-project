@@ -4,10 +4,12 @@ import AppKickstarter.AppKickstarter;
 import AppKickstarter.misc.*;
 import AppKickstarter.timer.Timer;
 
+import java.util.*;
 
 //======================================================================
 // ATMSS
 public class ATMSS extends AppThread {
+    public String[] acctList;
     private int pollingTime;
     private MBox cardReaderMBox;
     private MBox keypadMBox;
