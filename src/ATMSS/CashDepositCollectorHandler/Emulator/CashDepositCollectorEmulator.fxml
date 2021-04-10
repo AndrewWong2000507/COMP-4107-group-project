@@ -15,12 +15,13 @@
                   AnchorPane.bottomAnchor="241" layoutY="23" layoutX="28"/>
         <GridPane layoutX="95" layoutY="154" AnchorPane.bottomAnchor="74" AnchorPane.topAnchor="154"
                   AnchorPane.rightAnchor="68" AnchorPane.leftAnchor="96">
-            <Label text="\$100   " GridPane.rowIndex="0" GridPane.columnIndex="0" />
-            <TextField fx:id="numOf100" GridPane.rowIndex="0" GridPane.columnIndex="1" promptText="0"/>
+            <Label text="\$100   " GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField editable="false" fx:id="numOf100" GridPane.rowIndex="0" GridPane.columnIndex="1" promptText="0"/>
             <Label text="\$500   " GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <TextField fx:id="numOf500" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="0"/>
+            <TextField editable="false" fx:id="numOf500" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="0"/>
             <Label text="\$1000  " GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <TextField fx:id="numOf1000" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="0"/>
+            <TextField editable="false" fx:id="numOf1000" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                       promptText="0"/>
         </GridPane>
         <Button text="Confirm" fx:id="confirmDepositButton" AnchorPane.leftAnchor="117" AnchorPane.rightAnchor="287"
                 AnchorPane.topAnchor="308"

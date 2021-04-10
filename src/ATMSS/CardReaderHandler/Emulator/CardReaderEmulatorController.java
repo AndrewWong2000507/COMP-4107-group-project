@@ -94,4 +94,5 @@ public class CardReaderEmulatorController {
     public void appendTextArea(String status) {
         cardReaderTextArea.appendText(status + "\n");
     } // appendTextArea
+
 } // CardReaderEmulatorController

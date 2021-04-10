@@ -106,15 +106,10 @@ public class TouchDisplayEmulator extends TouchDisplayHandler {
         });
     } // reloadStage
 
-
     @Override
-    protected void handleShowACC(Msg msg) {
-        super.handleShowACC(msg);
-        String[] accList = msg.getDetails().trim().split("\\s+");
+    protected void handleShowScreen(Msg msg) {
+        super.handleShowScreen(msg);
         touchDisplayEmulatorController.TD_DisplayScreen.setText("");
-        touchDisplayEmulatorController.TD_DisplayScreen.appendText("Accounts in card :");
-        for (String acc : accList) {
-            touchDisplayEmulatorController.TD_DisplayScreen.appendText(acc + "\n");
-        }
+        touchDisplayEmulatorController.TD_DisplayScreen.appendText(msg.getDetails());
     }
 } // TouchDisplayEmulator

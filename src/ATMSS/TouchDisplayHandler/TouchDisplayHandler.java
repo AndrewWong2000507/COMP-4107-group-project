@@ -27,8 +27,9 @@ public class TouchDisplayHandler extends HWHandler {
                 handleUpdateDisplay(msg);
                 break;
 
-            case TD_ShowACC:
-                handleShowACC(msg);
+            case TD_ShowScreen:
+                handleShowScreen(msg);
+                break;
 
             default:
                 log.warning(id + ": unknown message type: [" + msg + "]");
@@ -43,7 +44,7 @@ public class TouchDisplayHandler extends HWHandler {
     } // handleUpdateDisplay
 
 
-    protected void handleShowACC(Msg msg) {
+    protected void handleShowScreen(Msg msg) {
         log.info(id + ": Show acc");
     }
 } // TouchDisplayHandler

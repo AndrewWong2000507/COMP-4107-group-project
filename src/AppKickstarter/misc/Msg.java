@@ -98,7 +98,6 @@ public class Msg {
         /** Cash deposited  */  CDC_CashDeposited,
         /** Print Advice */  AP_Print,
         /** Advice Collected */  AP_Collected,
-        /** Ask PIN on touch screen */  TD_AskPIN,
-        /** Show account on touch screen */  TD_ShowACC,
+        /** Show information on touch screen */  TD_ShowScreen,
     } // Type
 } // Msg

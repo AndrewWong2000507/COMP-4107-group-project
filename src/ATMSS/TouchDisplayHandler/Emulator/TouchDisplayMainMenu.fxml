@@ -6,6 +6,8 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0"
             prefWidth="680.0" xmlns="http://javafx.com/javafx/8.0" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ATMSS.TouchDisplayHandler.Emulator.TouchDisplayEmulatorController">
@@ -24,8 +26,52 @@
                            width="300.0" AnchorPane.bottomAnchor="140" AnchorPane.leftAnchor="0"/>
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="70.0" stroke="BLACK" strokeType="OUTSIDE"
                            width="300.0" AnchorPane.bottomAnchor="140" AnchorPane.rightAnchor="15"/>
+                <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="520" AnchorPane.topAnchor="0"
+                      fx:id="accChooseBox" prefHeight="200">
+                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="40.0" stroke="BLACK"
+                               strokeType="OUTSIDE"
+                               width="120"/>
+                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="40.0" stroke="BLACK"
+                               strokeType="OUTSIDE"
+                               width="120"/>
+                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="40.0" stroke="BLACK"
+                               strokeType="OUTSIDE"
+                               width="120"/>
+                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="40.0" stroke="BLACK"
+                               strokeType="OUTSIDE"
+                               width="120"/>
+                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="white" height="40.0" stroke="BLACK"
+                               strokeType="OUTSIDE"
+                               width="120"/>
+                </VBox>
+                <Text fx:id="acc1" text="Account 1" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="5">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Text>
+                <Text fx:id="acc2" text="Account 2" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="50">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Text>
+                <Text fx:id="acc3" text="Account 3" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="95">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Text>
+                <Text fx:id="acc4" text="Account 4" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="135">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Text>
+                <Text fx:id="acc5" text="Account 5" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="180">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Text>
                 <TextArea fx:id="TD_DisplayScreen" AnchorPane.topAnchor="0" AnchorPane.rightAnchor="15"
-                          AnchorPane.leftAnchor="0" editable="false" text="Welcome to ATM"/>
+                          AnchorPane.leftAnchor="120" editable="false" prefHeight="250"
+                          text="Welcome to ATM"/>
                 <Text fx:id="TD_CashDepositButtonText" text="Cash Deposit" AnchorPane.bottomAnchor="18"
                       AnchorPane.leftAnchor="73" AnchorPane.rightAnchor="413" AnchorPane.topAnchor="427">
                     <font>
@@ -66,6 +112,7 @@
                            onMouseClicked="#td_mouseClick" stroke="BLACK" strokeType="OUTSIDE" width="640"
                            AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0"
                            AnchorPane.rightAnchor="0"/>
+
             </children>
         </AnchorPane>
     </children>

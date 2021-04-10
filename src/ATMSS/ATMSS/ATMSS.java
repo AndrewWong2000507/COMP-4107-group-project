@@ -13,7 +13,6 @@ import java.util.*;
 //======================================================================
 // ATMSS
 public class ATMSS extends AppThread {
-    public String[] acctList;
     private int pollingTime;
     private MBox cardReaderMBox;
     private MBox keypadMBox;
@@ -34,6 +33,9 @@ public class ATMSS extends AppThread {
     boolean outOfCash = false;
     private String userInput = "";
     private String mode = "";
+    protected String[] acctList;
+    protected String currAcc;
+
     private String[] accNo = {"0", "1"}; //temp
 
 
@@ -62,6 +64,10 @@ public class ATMSS extends AppThread {
     //Change ATM state
     void setATMState(ATMState newATMState) {
         atmState = newATMState;
+    }
+
+    public void resetMode() {
+        mode = "";
     }
 
     public void resetAccList() {
@@ -258,7 +264,7 @@ public class ATMSS extends AppThread {
                 case "Cancel":
                     userInput = "";
                     log.info("Process canceled");
-                    mode = "";
+                    resetMode();
                     break;
                 case "Enter":
                     switch (mode) {
@@ -269,11 +275,11 @@ public class ATMSS extends AppThread {
                                 if (Double.parseDouble(userInput) % 100 == 0 && Double.parseDouble(userInput) > 0) {
                                     //only can get $100,$500 and $1000
                                     bamsHandler.withdraw(cardNo, accNo[0], "", userInput);
-                                    mode = "";
+                                    resetMode();
                                 }
                             } catch (BAMSInvalidReplyException | IOException e) {
                                 log.info("ATMSS: Error");
-                                mode = "";
+                                resetMode();
                             }
                             break;
                         case "cash transaction":
@@ -285,10 +291,10 @@ public class ATMSS extends AppThread {
                                 }
                                 //send to td transaction success
                                 log.info("ATMSS: transfer finished");
-                                mode = "";
+                                resetMode();
                             } catch (BAMSInvalidReplyException | IOException e) {
                                 log.info("ATMSS: Error");
-                                mode = "";
+                                resetMode();
                             }
                             break;
                         case "cash deposit":
@@ -299,10 +305,10 @@ public class ATMSS extends AppThread {
                                 }
                                 //send to td transaction success
                                 log.info("ATMSS: deposit finished");
-                                mode = "";
+                                resetMode();
                             } catch (BAMSInvalidReplyException | IOException e) {
                                 log.info("ATMSS: Error");
-                                mode = "";
+                                resetMode();
                             }
                             break;
                         default:
@@ -343,6 +349,7 @@ public class ATMSS extends AppThread {
         String[] pos = msg.getDetails().trim().split("\\s+");
         int posX = Integer.parseInt(pos[0]);
         int posY = Integer.parseInt(pos[1]);
+
         if (posX <= 300 && posY >= 415) {
             //cash deposit
             log.info("pressed cash deposit");
@@ -356,17 +363,15 @@ public class ATMSS extends AppThread {
         } else if (posX <= 300 && posY >= 275) {
             //cet account
             log.info("pressed get account");
-            String cred = "";
+            String cred = "Account(s) in current card:\n";
             for (String acc : acctList) {
-                cred += acc + " ";
+                cred += acc + "\n";
             }
-            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowACC, cred));
+            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
         } else if (posX >= 340 && posX <= 640 && posY >= 415) {
             //log out
             log.info("pressed logout");
-            cardNo = "";
-            pin = "";
-            userInput = "";
+            resetAll();
             touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
             cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, "Card eject"));
         } else if (posX >= 340 && posX <= 640 && posY >= 345) {
@@ -377,6 +382,66 @@ public class ATMSS extends AppThread {
             log.info("pressed cash transaction");
             mode = "cash transaction";
             log.info("ATM mode : " + mode);
+        } else if (posX <= 120 && posY >= 160) {
+            //change curr account button 5
+            int accAmount = acctList.length;
+            System.out.println("Total Acc Number: " + accAmount);
+            if (accAmount >= 5) {
+                currAcc = acctList[4];
+                String cred = "Customer is now accessing Account 5 :" + currAcc + "\n";
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+            } else {
+                String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+            }
+        } else if (posX <= 120 && posY >= 120) {
+            //change curr account button 4
+            int accAmount = acctList.length;
+            System.out.println("Total Acc Number: " + accAmount);
+            if (accAmount >= 4) {
+                currAcc = acctList[3];
+                String cred = "Customer is now accessing Account 4 :" + currAcc + "\n";
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+            } else {
+                String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+            }
+        } else if (posX <= 120 && posY >= 80) {
+            //change curr account button 3
+            int accAmount = acctList.length;
+            System.out.println("Total Acc Number: " + accAmount);
+            if (accAmount >= 3) {
+                currAcc = acctList[2];
+                String cred = "Customer is now accessing Account 3 :" + currAcc + "\n";
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+            } else {
+                String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+            }
+        } else if (posX <= 120 && posY >= 40) {
+            //change curr account button 2
+            int accAmount = acctList.length;
+            System.out.println("Total Acc Number: " + accAmount);
+            if (accAmount >= 2) {
+                currAcc = acctList[1];
+                String cred = "Customer is now accessing Account 2 :" + currAcc + "\n";
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+            } else {
+                String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+            }
+        } else if (posX <= 120 && posY >= 0) {
+            //change curr account button 1
+            int accAmount = acctList.length;
+            System.out.println("Total Acc Number: " + accAmount);
+            if (accAmount >= 1) {
+                currAcc = acctList[0];
+                String cred = "Customer is now accessing Account 1 :" + currAcc + "\n";
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+            } else {
+                String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+            }
         }
 
     } // processMouseClicked

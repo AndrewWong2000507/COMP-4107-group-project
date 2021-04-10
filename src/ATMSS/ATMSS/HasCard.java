@@ -10,6 +10,7 @@ public class HasCard implements ATMState {
     ATMSS atmMachine;
     String urlPrefix = "http://cslinux0.comp.hkbu.edu.hk/comp4107_20-21_grp12/BAMS.php";
     BAMSHandler bams = new BAMSHandler(urlPrefix);
+
     public HasCard(ATMSS atmss) {
         atmMachine = atmss;
     }
@@ -33,15 +34,15 @@ public class HasCard implements ATMState {
         boolean session = false;
         atmMachine.resetPin();
         try {
-            session = login(bams,CardNum, Pin);
+            session = login(bams, CardNum, Pin);
         } catch (Exception e) {
             System.out.println("TestBAMSHandler: Exception caught: " + e.getMessage());
             e.printStackTrace();
         }
-        if(session){
-            try{
+        if (session) {
+            try {
                 atmMachine.acctList = getAcc(bams, CardNum);
-            }catch(Exception e){
+            } catch (Exception e) {
                 System.out.println("TestBAMSHandler: Exception caught: " + e.getMessage());
                 e.printStackTrace();
             }
@@ -55,9 +56,9 @@ public class HasCard implements ATMState {
     boolean login(BAMSHandler bams, String cardNo, String Pin) throws BAMSInvalidReplyException, IOException {
         String cred = bams.login(cardNo, Pin);
         System.out.println("cred: " + cred);
-        if(cred.equals("cred-1")){
+        if (cred.equals("cred-1")) {
             return true;
-        }else{
+        } else {
             return false;
         }
     } // testLogin
@@ -66,6 +67,7 @@ public class HasCard implements ATMState {
         String bamsReply = "";
         bamsReply = bams.getAccounts(cardNo, "cred-1");
         String[] accts = bamsReply.split(" ");
+        atmMachine.currAcc = accts[0];
         System.out.println(accts[0]);
         return accts;
     }

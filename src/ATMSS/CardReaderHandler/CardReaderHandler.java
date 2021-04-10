@@ -26,7 +26,7 @@ public class CardReaderHandler extends HWHandler {
 
             case CR_EjectCard:
                 atmss.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, msg.getDetails()));
-                //handleCardEject();
+                handleCardEject();
                 break;
 
             case CR_CardRemoved:
