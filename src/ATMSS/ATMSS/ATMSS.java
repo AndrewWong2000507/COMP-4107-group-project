@@ -35,6 +35,8 @@ public class ATMSS extends AppThread {
     private String mode = "";
     protected String[] acctList;
     protected String currAcc;
+    public int transferStageCount = 0;
+    private String destAcc = "";
 
     private String[] accNo = {"0", "1"}; //temp
 
@@ -229,6 +231,7 @@ public class ATMSS extends AppThread {
                 case "7":
                 case "8":
                 case "9":
+                case "00":
                     System.out.println("Key Pressed:" + key);
                     pin = pin + key;
                     System.out.println("Pin:" + pin);
@@ -273,6 +276,7 @@ public class ATMSS extends AppThread {
                 case "7":
                 case "8":
                 case "9":
+                case "00":
                     userInput = userInput + key;
                     log.info("User Input : " + userInput);
                     break;
@@ -281,10 +285,24 @@ public class ATMSS extends AppThread {
                     switch (mode) {
                         case "cash deposit":
                             cashDepositCollectorMBox.send(new Msg(id, mbox, Msg.Type.CDC_CashDepositorOpen, ""));
+                            resetMode();
+                            break;
+                        case "cash transaction amount":
+                            mode = "cash transaction";
+                            //Ask user click the account
+                            String cred = "Which is your destination Account?\n";
+
+                            for (int i = 0; i < acctList.length; i++) {
+                                cred += i + 1 + ". " + acctList[i] + "\n";
+
+                            }
+                            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+                            log.info("ATM mode : " + mode);
+                            break;
                         default:
                             log.info("Process canceled");
+                            resetMode();
                     }
-                    resetMode();
                     break;
                 case "Enter":
                     switch (mode) {
@@ -303,18 +321,45 @@ public class ATMSS extends AppThread {
                             }
                             break;
                         case "cash transaction":
+                            //Ask user choice the target account
+                            int i = Integer.parseInt(userInput);
+                            String cred = "";
+                            destAcc = acctList[i - 1];
+                            if (currAcc.equals(destAcc)) {
+                                //when choosing same ac as currACC
+                                log.info(id + ": Cannot transfer from same acc to same acc");
+                                cred = "Invalid option! Please select other account that you are not currently accessing.\nCurrent account: " + currAcc + "\nTransaction is cancelled. Please try again.";
+                                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+                                resetMode();
+                            } else {
+                                //chose other ACC
+                                log.info(id + ": account " + destAcc + " is chosen");
+                                mode = "cash transaction amount";
+                                cred = "Please input the amount you want to transfer: \n";
+                                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+                            }
+                            userInput = "";
+                            break;
+                        case "cash transaction amount":
                             //just some template
                             log.info("ATMSS: user Input " + userInput);
                             try {
-                                if (Double.parseDouble(userInput) > 0) {
-                                    bamsHandler.transfer(cardNo, "", accNo[0], accNo[1], userInput);
+                                if (Double.parseDouble(userInput) >= 0) {
+                                    bamsHandler.transfer(cardNo, "", currAcc, destAcc, userInput);
+                                    System.out.println("Transfer Success!");
                                 }
                                 //send to td transaction success
                                 log.info("ATMSS: transfer finished");
+                                double enquiry1 = bamsHandler.enquiry(cardNo, currAcc, "");
+                                double enquiry2 = bamsHandler.enquiry(cardNo, destAcc, "");
+                                cred = "Transfer complete\n\nCurrent account " + currAcc + " balance : " + enquiry1 + "\n\nDestination account " + destAcc + " balance : " + enquiry2;
+                                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                                 resetMode();
+                                userInput = "";
                             } catch (BAMSInvalidReplyException | IOException e) {
                                 log.info("ATMSS: Error");
                                 resetMode();
+                                userInput = "";
                             }
                             break;
                         default:
@@ -353,18 +398,18 @@ public class ATMSS extends AppThread {
         int posX = Integer.parseInt(pos[0]);
         int posY = Integer.parseInt(pos[1]);
 
-        if (posX <= 300 && posY >= 415 && atmState==hasCorrectPin) {
+        if (posX <= 300 && posY >= 415 && atmState == hasCorrectPin) {
             //cash deposit
             log.info("pressed cash deposit");
             cashDepositCollectorMBox.send(new Msg(id, mbox, Msg.Type.CDC_CashDepositorOpen, ""));
             mode = "cash deposit";
             log.info("ATM mode : " + mode);
-        } else if (posX <= 300 && posY >= 345 && atmState==hasCorrectPin) {
+        } else if (posX <= 300 && posY >= 345 && atmState == hasCorrectPin) {
             //cash withdrawal
             log.info("pressed cash withdrawal");
             mode = "cash withdrawal";
             log.info("ATM mode : " + mode);
-        } else if (posX <= 300 && posY >= 275 && atmState==hasCorrectPin) {
+        } else if (posX <= 300 && posY >= 275 && atmState == hasCorrectPin) {
             //cet account
             log.info("pressed get account");
             String cred = "Account(s) in current card:\n";
@@ -372,11 +417,11 @@ public class ATMSS extends AppThread {
                 cred += acc + "\n";
             }
             touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
-        } else if (posX >= 340 && posX <= 640 && posY >= 415 && atmState==hasCorrectPin) {
+        } else if (posX >= 340 && posX <= 640 && posY >= 415 && atmState == hasCorrectPin) {
             //log out
             log.info("pressed logout");
             touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "Confirmation"));
-        } else if (posX >= 340 && posX <= 640 && posY >= 345 && atmState==hasCorrectPin) {
+        } else if (posX >= 340 && posX <= 640 && posY >= 345 && atmState == hasCorrectPin) {
             //balance enquiry
             log.info("pressed balance enquiry");
             try {
@@ -386,12 +431,20 @@ public class ATMSS extends AppThread {
             } catch (BAMSInvalidReplyException | IOException e) {
                 e.printStackTrace();
             }
-        } else if (posX >= 340 && posX <= 640 && posY >= 275 && atmState==hasCorrectPin) {
+        } else if (posX >= 340 && posX <= 640 && posY >= 275 && atmState == hasCorrectPin) {
             //cash transaction
             log.info("pressed cash transaction");
             mode = "cash transaction";
+            //Ask user click the account
+            String cred = "Which is your destination Account?\n";
+
+            for (int i = 0; i < acctList.length; i++) {
+                cred += i + 1 + ". " + acctList[i] + "\n";
+
+            }
+            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             log.info("ATM mode : " + mode);
-        } else if (posX <= 120 && posY >= 160 && atmState==hasCorrectPin) {
+        } else if (posX <= 120 && posY >= 160 && atmState == hasCorrectPin) {
             //change curr account button 5
             int accAmount = acctList.length;
             System.out.println("Total Acc Number: " + accAmount);
@@ -403,7 +456,7 @@ public class ATMSS extends AppThread {
                 String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             }
-        } else if (posX <= 120 && posY >= 120 && atmState==hasCorrectPin) {
+        } else if (posX <= 120 && posY >= 120 && atmState == hasCorrectPin) {
             //change curr account button 4
             int accAmount = acctList.length;
             System.out.println("Total Acc Number: " + accAmount);
@@ -415,7 +468,7 @@ public class ATMSS extends AppThread {
                 String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             }
-        } else if (posX <= 120 && posY >= 80 && atmState==hasCorrectPin) {
+        } else if (posX <= 120 && posY >= 80 && atmState == hasCorrectPin) {
             //change curr account button 3
             int accAmount = acctList.length;
             System.out.println("Total Acc Number: " + accAmount);
@@ -427,7 +480,7 @@ public class ATMSS extends AppThread {
                 String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             }
-        } else if (posX <= 120 && posY >= 40 && atmState==hasCorrectPin) {
+        } else if (posX <= 120 && posY >= 40 && atmState == hasCorrectPin) {
             //change curr account button 2
             int accAmount = acctList.length;
             System.out.println("Total Acc Number: " + accAmount);
@@ -439,7 +492,7 @@ public class ATMSS extends AppThread {
                 String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             }
-        } else if (posX <= 120 && posY >= 0 && atmState==hasCorrectPin) {
+        } else if (posX <= 120 && posY >= 0 && atmState == hasCorrectPin) {
             //change curr account button 1
             int accAmount = acctList.length;
             System.out.println("Total Acc Number: " + accAmount);
