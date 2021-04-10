@@ -52,6 +52,9 @@ public class ATMSS extends AppThread {
         atmState = newATMState;
     }
 
+    public void resetAccList(){
+        acctList = new String[4];
+    }
     public void resetCount(){
         pinCounter = 0;
     }
@@ -59,6 +62,7 @@ public class ATMSS extends AppThread {
     public void resetAll(){
         resetCount();
         resetPin();
+        resetAccList();
     }
 
     public void insertCard() {
