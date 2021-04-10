@@ -189,6 +189,13 @@ public class ATMSS extends AppThread {
                     quit = true;
                     break;
 
+                case CDC_CashDeposited:
+                    try {
+                        bamsHandler.deposit(cardNo, currAcc, "", msg.getDetails());
+                        resetMode();
+                    } catch (BAMSInvalidReplyException | IOException e) {
+                        e.printStackTrace();
+                    }
                 default:
                     log.warning(id + ": unknown message type: [" + msg + "]");
             }
@@ -319,8 +326,6 @@ public class ATMSS extends AppThread {
                 cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, ""));
             } else if (msg.getDetails().compareToIgnoreCase("1") == 0) {
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
-            } else if (msg.getDetails().compareToIgnoreCase("2") == 0) {
-            } else if (msg.getDetails().compareToIgnoreCase("3") == 0) {
             }
         }
         // *** The following is an example only!! ***
@@ -340,6 +345,7 @@ public class ATMSS extends AppThread {
         if (posX <= 300 && posY >= 415) {
             //cash deposit
             log.info("pressed cash deposit");
+            cashDepositCollectorMBox.send(new Msg(id, mbox, Msg.Type.CDC_CashDepositorOpen, ""));
             mode = "cash deposit";
             log.info("ATM mode : " + mode);
         } else if (posX <= 300 && posY >= 345) {

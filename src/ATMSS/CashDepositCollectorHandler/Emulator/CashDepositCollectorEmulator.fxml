@@ -11,7 +11,8 @@
             fx:controller="ATMSS.CashDepositCollectorHandler.Emulator.CashDepositCollectorEmulatorController"
             prefHeight="360.0" prefWidth="456.0">
     <children>
-        <TextArea editable="false" AnchorPane.topAnchor="23" AnchorPane.leftAnchor="28" AnchorPane.rightAnchor="30.3"
+        <TextArea fx:id="infoPanel" editable="false" AnchorPane.topAnchor="23" AnchorPane.leftAnchor="28"
+                  AnchorPane.rightAnchor="30.3"
                   AnchorPane.bottomAnchor="241" layoutY="23" layoutX="28"/>
         <GridPane layoutX="95" layoutY="154" AnchorPane.bottomAnchor="74" AnchorPane.topAnchor="154"
                   AnchorPane.rightAnchor="68" AnchorPane.leftAnchor="96">
@@ -23,11 +24,13 @@
             <TextField editable="false" fx:id="numOf1000" GridPane.rowIndex="2" GridPane.columnIndex="1"
                        promptText="0"/>
         </GridPane>
-        <Button text="Confirm" fx:id="confirmDepositButton" AnchorPane.leftAnchor="117" AnchorPane.rightAnchor="287"
+        <Button text="Confirm" fx:id="confirmDepositButton" onAction="#receiveDeposit" AnchorPane.leftAnchor="117"
+                AnchorPane.rightAnchor="287"
                 AnchorPane.topAnchor="308"
-                AnchorPane.bottomAnchor="26.4" layoutY="308" layoutX="117"/>
-        <Button text="Cancel" fx:id="cancelDepositButton" AnchorPane.topAnchor="308" AnchorPane.leftAnchor="288"
-                AnchorPane.rightAnchor="116" AnchorPane.bottomAnchor="26.4" layoutX="288" layoutY="308"/>
+                AnchorPane.bottomAnchor="26.4" layoutY="308" layoutX="117" minWidth="-Infinity" disable="true"/>
+        <Button text="Cancel" fx:id="cancelDepositButton" onAction="#cancelDeposit" AnchorPane.topAnchor="308"
+                AnchorPane.leftAnchor="288"
+                AnchorPane.rightAnchor="116" AnchorPane.bottomAnchor="26.4" layoutX="288" layoutY="308" disable="true"/>
     </children>
 
 </AnchorPane>

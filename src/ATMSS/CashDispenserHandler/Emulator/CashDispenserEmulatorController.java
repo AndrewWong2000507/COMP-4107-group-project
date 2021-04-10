@@ -34,4 +34,6 @@ public class CashDispenserEmulatorController {
         cashOut$1000.setText("");
         cashOutTotal.setText("");
     }
+
+
 }

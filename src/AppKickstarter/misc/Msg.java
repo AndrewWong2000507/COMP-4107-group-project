@@ -95,6 +95,7 @@ public class Msg {
 	/** Eject card */			CR_EjectCard,
 	/** Key pressed */			KP_KeyPressed,
         /** Cash Dispense */  CD_CashDispense,
+        /** Open Cash Depositor */  CDC_CashDepositorOpen,
         /** Cash deposited  */  CDC_CashDeposited,
         /** Print Advice */  AP_Print,
         /** Advice Collected */  AP_Collected,

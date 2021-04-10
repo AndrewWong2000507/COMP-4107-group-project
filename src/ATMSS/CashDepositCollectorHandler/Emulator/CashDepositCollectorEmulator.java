@@ -41,4 +41,14 @@ public class CashDepositCollectorEmulator extends CashDepositCollectorHandler {
         myStage.show();
     }
 
+    @Override
+    protected void handleCashDepositor() {
+        super.handleCashDepositor();
+        cashDepositCollectorEmulatorController.numOf500.setEditable(!cashDepositCollectorEmulatorController.numOf500.isEditable());
+        cashDepositCollectorEmulatorController.numOf100.setEditable(!cashDepositCollectorEmulatorController.numOf100.isEditable());
+        cashDepositCollectorEmulatorController.numOf1000.setEditable(!cashDepositCollectorEmulatorController.numOf1000.isEditable());
+        cashDepositCollectorEmulatorController.confirmDepositButton.setDisable(!cashDepositCollectorEmulatorController.confirmDepositButton.isDisabled());
+        cashDepositCollectorEmulatorController.cancelDepositButton.setDisable(!cashDepositCollectorEmulatorController.cancelDepositButton.isDisabled());
+        log.info(id + ": opened, Buzzer should be alerting");
+    }
 }

@@ -13,8 +13,11 @@ public class CashDispenserHandler extends HWHandler {
 
     @Override
     protected void processMsg(Msg msg) {
-        switch (msg.getDetails()){
+        switch (msg.getType()) {
 
+            default:
+                log.warning(id + ": unknown message type: [" + msg + "]");
         }
     }
+
 }
