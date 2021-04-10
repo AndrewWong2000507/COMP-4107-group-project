@@ -162,7 +162,9 @@ public class ATMSS extends AppThread {
 
                 case CR_EjectCard:
                     this.ejectCard();
-                    cardNo = "";
+                    resetAll();
+                    cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, "Card eject"));
+                    touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
                     log.info("CardEjected: " + msg.getDetails());
                     break;
 
@@ -297,20 +299,6 @@ public class ATMSS extends AppThread {
                                 resetMode();
                             }
                             break;
-                        case "cash deposit":
-                            log.info("ATMSS: user Input " + userInput);
-                            try {
-                                if (Double.parseDouble(userInput) > 0) {
-                                    bamsHandler.deposit(cardNo, accNo[0], "", userInput);
-                                }
-                                //send to td transaction success
-                                log.info("ATMSS: deposit finished");
-                                resetMode();
-                            } catch (BAMSInvalidReplyException | IOException e) {
-                                log.info("ATMSS: Error");
-                                resetMode();
-                            }
-                            break;
                         default:
                             log.info("ATMSS: Please choose the service type");
                             //send the msg to display
@@ -333,7 +321,6 @@ public class ATMSS extends AppThread {
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
             } else if (msg.getDetails().compareToIgnoreCase("2") == 0) {
             } else if (msg.getDetails().compareToIgnoreCase("3") == 0) {
-                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "Confirmation"));
             }
         }
         // *** The following is an example only!! ***
@@ -371,12 +358,17 @@ public class ATMSS extends AppThread {
         } else if (posX >= 340 && posX <= 640 && posY >= 415) {
             //log out
             log.info("pressed logout");
-            resetAll();
-            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
-            cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, "Card eject"));
+            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "Confirmation"));
         } else if (posX >= 340 && posX <= 640 && posY >= 345) {
             //balance enquiry
             log.info("pressed balance enquiry");
+            try {
+                double enquiry = bamsHandler.enquiry(cardNo, currAcc, "");
+                String cred = "Card No. : " + cardNo + "\nAccount : " + currAcc + "\nBalance : $" + enquiry + "\n";
+                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+            } catch (BAMSInvalidReplyException | IOException e) {
+                e.printStackTrace();
+            }
         } else if (posX >= 340 && posX <= 640 && posY >= 275) {
             //cash transaction
             log.info("pressed cash transaction");
@@ -400,7 +392,7 @@ public class ATMSS extends AppThread {
             System.out.println("Total Acc Number: " + accAmount);
             if (accAmount >= 4) {
                 currAcc = acctList[3];
-                String cred = "Customer is now accessing Account 4 :" + currAcc + "\n";
+                String cred = "Customer is now accessing Account 4 : " + currAcc + "\n";
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             } else {
                 String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
@@ -412,7 +404,7 @@ public class ATMSS extends AppThread {
             System.out.println("Total Acc Number: " + accAmount);
             if (accAmount >= 3) {
                 currAcc = acctList[2];
-                String cred = "Customer is now accessing Account 3 :" + currAcc + "\n";
+                String cred = "Customer is now accessing Account 3 : " + currAcc + "\n";
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             } else {
                 String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
@@ -424,7 +416,7 @@ public class ATMSS extends AppThread {
             System.out.println("Total Acc Number: " + accAmount);
             if (accAmount >= 2) {
                 currAcc = acctList[1];
-                String cred = "Customer is now accessing Account 2 :" + currAcc + "\n";
+                String cred = "Customer is now accessing Account 2 : " + currAcc + "\n";
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             } else {
                 String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
@@ -436,7 +428,7 @@ public class ATMSS extends AppThread {
             System.out.println("Total Acc Number: " + accAmount);
             if (accAmount >= 1) {
                 currAcc = acctList[0];
-                String cred = "Customer is now accessing Account 1 :" + currAcc + "\n";
+                String cred = "Customer is now accessing Account 1 : " + currAcc + "\n";
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             } else {
                 String cred = "Invalid operation. Only " + accAmount + " account exist in this card.\n";
