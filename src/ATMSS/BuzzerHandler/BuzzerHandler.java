@@ -16,6 +16,9 @@ public class BuzzerHandler extends HWHandler {
 
     @Override
     protected void processMsg(Msg msg) {
-
+        switch (msg.getType()){
+            default:
+                log.warning(id + ": unknown message type: [" + msg + "]");
+        }
     }
 }

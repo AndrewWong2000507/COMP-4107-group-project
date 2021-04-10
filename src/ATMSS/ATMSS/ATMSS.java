@@ -272,7 +272,12 @@ public class ATMSS extends AppThread {
                     break;
                 case "Cancel":
                     userInput = "";
-                    log.info("Process canceled");
+                    switch (mode) {
+                        case "cash deposit":
+                            cashDepositCollectorMBox.send(new Msg(id, mbox, Msg.Type.CDC_CashDepositorOpen, ""));
+                        default:
+                            log.info("Process canceled");
+                    }
                     resetMode();
                     break;
                 case "Enter":

@@ -28,9 +28,6 @@
                 AnchorPane.rightAnchor="287"
                 AnchorPane.topAnchor="308"
                 AnchorPane.bottomAnchor="26.4" layoutY="308" layoutX="117" minWidth="-Infinity" disable="true"/>
-        <Button text="Cancel" fx:id="cancelDepositButton" onAction="#cancelDeposit" AnchorPane.topAnchor="308"
-                AnchorPane.leftAnchor="288"
-                AnchorPane.rightAnchor="116" AnchorPane.bottomAnchor="26.4" layoutX="288" layoutY="308" disable="true"/>
     </children>
 
 </AnchorPane>

@@ -34,20 +34,20 @@ public class CashDepositCollectorEmulatorController {
 
 
     public void receiveDeposit(ActionEvent actionEvent) {
-        int hundredDollar = Integer.parseInt(numOf100.getText());
-        int fiveHundredDollar = Integer.parseInt(numOf500.getText());
-        int thousandDollar = Integer.parseInt(numOf1000.getText());
-        if (hundredDollar >= 0 && fiveHundredDollar >= 0 && thousandDollar >= 0) {
-            String total = String.valueOf(100 * hundredDollar + 500 * fiveHundredDollar + 1000 * thousandDollar);
-            infoPanel.appendText("Cash deposited :" + total);
-            cashDepositCollectorMBox.send(new Msg(id, cashDepositCollectorMBox, Msg.Type.CDC_CashDeposited, total));
-        } else {
-            log.warning(id + ": Invalid deposit");
+        try {
+            int hundredDollar = Integer.parseInt(numOf100.getText());
+            int fiveHundredDollar = Integer.parseInt(numOf500.getText());
+            int thousandDollar = Integer.parseInt(numOf1000.getText());
+            if (hundredDollar >= 0 && fiveHundredDollar >= 0 && thousandDollar >= 0) {
+                String total = String.valueOf(100 * hundredDollar + 500 * fiveHundredDollar + 1000 * thousandDollar);
+                infoPanel.appendText("Cash deposited :" + total);
+                cashDepositCollectorMBox.send(new Msg(id, cashDepositCollectorMBox, Msg.Type.CDC_CashDeposited, total));
+            } else {
+                log.warning(id + ": Invalid deposit");
+            }
+        } catch (Exception e) {
+            log.info(id + " : input error");
         }
-        cashDepositCollectorEmulator.handleCashDepositor();
-    }
-
-    public void cancelDeposit(ActionEvent actionEvent) {
         cashDepositCollectorEmulator.handleCashDepositor();
         numOf1000.setText("0");
         numOf100.setText("0");
