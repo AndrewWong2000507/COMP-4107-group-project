@@ -71,7 +71,7 @@ public class ATMSS extends AppThread {
     }
 
     public void resetAccList() {
-        acctList = new String[4];
+        acctList = new String[5];
     }
 
     public void resetCount() {
@@ -86,6 +86,7 @@ public class ATMSS extends AppThread {
         resetCount();
         resetPin();
         resetAccList();
+        resetMode();
     }
 
     public void insertCard() {
@@ -193,6 +194,9 @@ public class ATMSS extends AppThread {
                     try {
                         bamsHandler.deposit(cardNo, currAcc, "", msg.getDetails());
                         resetMode();
+                        double enquiry = bamsHandler.enquiry(cardNo, currAcc, "");
+                        String cred = "Deposit Success!\nAmount:" + msg.getDetails() + "\nCard No. : " + cardNo + "\nAccount : " + currAcc + "\nBalance : $" + enquiry + "\n";
+                        touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                     } catch (BAMSInvalidReplyException | IOException e) {
                         e.printStackTrace();
                     }
