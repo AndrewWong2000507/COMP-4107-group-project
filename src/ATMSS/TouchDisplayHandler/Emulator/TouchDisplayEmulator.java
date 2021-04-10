@@ -26,57 +26,57 @@ public class TouchDisplayEmulator extends TouchDisplayHandler {
     //------------------------------------------------------------
     // TouchDisplayEmulator
     public TouchDisplayEmulator(String id, ATMSSStarter atmssStarter) throws Exception {
-	super(id, atmssStarter);
-	this.atmssStarter = atmssStarter;
-	this.id = id;
+        super(id, atmssStarter);
+        this.atmssStarter = atmssStarter;
+        this.id = id;
     } // TouchDisplayEmulator
 
 
     //------------------------------------------------------------
     // start
     public void start() throws Exception {
-	Parent root;
-	myStage = new Stage();
-	FXMLLoader loader = new FXMLLoader();
-	String fxmlName = "TouchDisplayEmulator.fxml";
-	loader.setLocation(TouchDisplayEmulator.class.getResource(fxmlName));
-	root = loader.load();
-	touchDisplayEmulatorController = (TouchDisplayEmulatorController) loader.getController();
-	touchDisplayEmulatorController.initialize(id, atmssStarter, log, this);
-	myStage.initStyle(StageStyle.DECORATED);
-	myStage.setScene(new Scene(root, WIDTH, HEIGHT));
-	myStage.setTitle("Touch Display");
-	myStage.setResizable(false);
-	myStage.setOnCloseRequest((WindowEvent event) -> {
-	    atmssStarter.stopApp();
-	    Platform.exit();
-	});
-	myStage.show();
+        Parent root;
+        myStage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        String fxmlName = "TouchDisplayEmulator.fxml";
+        loader.setLocation(TouchDisplayEmulator.class.getResource(fxmlName));
+        root = loader.load();
+        touchDisplayEmulatorController = (TouchDisplayEmulatorController) loader.getController();
+        touchDisplayEmulatorController.initialize(id, atmssStarter, log, this);
+        myStage.initStyle(StageStyle.DECORATED);
+        myStage.setScene(new Scene(root, WIDTH, HEIGHT));
+        myStage.setTitle("Touch Display");
+        myStage.setResizable(false);
+        myStage.setOnCloseRequest((WindowEvent event) -> {
+            atmssStarter.stopApp();
+            Platform.exit();
+        });
+        myStage.show();
     } // TouchDisplayEmulator
 
 
     //------------------------------------------------------------
     // handleUpdateDisplay
     protected void handleUpdateDisplay(Msg msg) {
-	log.info(id + ": update display -- " + msg.getDetails());
+        log.info(id + ": update display -- " + msg.getDetails());
 
-	switch (msg.getDetails()) {
-	    case "BlankScreen":
-		reloadStage("TouchDisplayEmulator.fxml");
-		break;
+        switch (msg.getDetails()) {
+            case "BlankScreen":
+                reloadStage("TouchDisplayEmulator.fxml");
+                break;
 
-	    case "MainMenu":
-		reloadStage("TouchDisplayMainMenu.fxml");
-		break;
+            case "MainMenu":
+                reloadStage("TouchDisplayMainMenu.fxml");
+                break;
 
-	    case "Confirmation":
-		reloadStage("TouchDisplayConfirmation.fxml");
-		break;
+            case "Confirmation":
+                reloadStage("TouchDisplayConfirmation.fxml");
+                break;
 
-	    default:
-		log.severe(id + ": update display with unknown display type -- " + msg.getDetails());
-		break;
-	}
+            default:
+                log.severe(id + ": update display with unknown display type -- " + msg.getDetails());
+                break;
+        }
     } // handleUpdateDisplay
 
 
@@ -86,23 +86,35 @@ public class TouchDisplayEmulator extends TouchDisplayHandler {
         TouchDisplayEmulator touchDisplayEmulator = this;
 
         Platform.runLater(new Runnable() {
-	    @Override
-	    public void run() {
-		try {
-		    log.info(id + ": loading fxml: " + fxmlFName);
+            @Override
+            public void run() {
+                try {
+                    log.info(id + ": loading fxml: " + fxmlFName);
 
-		    Parent root;
-		    FXMLLoader loader = new FXMLLoader();
-		    loader.setLocation(TouchDisplayEmulator.class.getResource(fxmlFName));
-		    root = loader.load();
-		    touchDisplayEmulatorController = (TouchDisplayEmulatorController) loader.getController();
-		    touchDisplayEmulatorController.initialize(id, atmssStarter, log, touchDisplayEmulator);
-		    myStage.setScene(new Scene(root, WIDTH, HEIGHT));
-		} catch (Exception e) {
-		    log.severe(id + ": failed to load " + fxmlFName);
-		    e.printStackTrace();
-		}
-	    }
-	});
+                    Parent root;
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(TouchDisplayEmulator.class.getResource(fxmlFName));
+                    root = loader.load();
+                    touchDisplayEmulatorController = (TouchDisplayEmulatorController) loader.getController();
+                    touchDisplayEmulatorController.initialize(id, atmssStarter, log, touchDisplayEmulator);
+                    myStage.setScene(new Scene(root, WIDTH, HEIGHT));
+                } catch (Exception e) {
+                    log.severe(id + ": failed to load " + fxmlFName);
+                    e.printStackTrace();
+                }
+            }
+        });
     } // reloadStage
+
+
+    @Override
+    protected void handleShowACC(Msg msg) {
+        super.handleShowACC(msg);
+        String[] accList = msg.getDetails().trim().split("\\s+");
+        touchDisplayEmulatorController.TD_DisplayScreen.setText("");
+        touchDisplayEmulatorController.TD_DisplayScreen.appendText("Accounts in card :");
+        for (String acc : accList) {
+            touchDisplayEmulatorController.TD_DisplayScreen.appendText(acc + "\n");
+        }
+    }
 } // TouchDisplayEmulator

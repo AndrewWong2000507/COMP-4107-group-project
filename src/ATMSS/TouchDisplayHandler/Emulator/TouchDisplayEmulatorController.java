@@ -3,6 +3,7 @@ package ATMSS.TouchDisplayHandler.Emulator;
 import AppKickstarter.AppKickstarter;
 import AppKickstarter.misc.MBox;
 import AppKickstarter.misc.Msg;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 
 import java.util.logging.Logger;
@@ -11,6 +12,7 @@ import java.util.logging.Logger;
 //======================================================================
 // TouchDisplayEmulatorController
 public class TouchDisplayEmulatorController {
+    public TextArea TD_DisplayScreen;
     private String id;
     private AppKickstarter appKickstarter;
     private Logger log;

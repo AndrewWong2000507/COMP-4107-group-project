@@ -64,10 +64,11 @@ public class ATMSS extends AppThread {
         atmState = newATMState;
     }
 
-    public void resetAccList(){
+    public void resetAccList() {
         acctList = new String[4];
     }
-    public void resetCount(){
+
+    public void resetCount() {
         pinCounter = 0;
     }
 
@@ -222,6 +223,9 @@ public class ATMSS extends AppThread {
                     } else {
                         cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_CardRemoved, "Card Locked"));
                     }
+                    if (atmState == hasCorrectPin) {
+                        touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "MainMenu"));
+                    }
                     break;
                 case "Erase":
                     if (pin.length() > 0) {
@@ -322,7 +326,6 @@ public class ATMSS extends AppThread {
             } else if (msg.getDetails().compareToIgnoreCase("1") == 0) {
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
             } else if (msg.getDetails().compareToIgnoreCase("2") == 0) {
-                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "MainMenu"));
             } else if (msg.getDetails().compareToIgnoreCase("3") == 0) {
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "Confirmation"));
             }
@@ -353,9 +356,19 @@ public class ATMSS extends AppThread {
         } else if (posX <= 300 && posY >= 275) {
             //cet account
             log.info("pressed get account");
+            String cred = "";
+            for (String acc : acctList) {
+                cred += acc + " ";
+            }
+            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowACC, cred));
         } else if (posX >= 340 && posX <= 640 && posY >= 415) {
             //log out
             log.info("pressed logout");
+            cardNo = "";
+            pin = "";
+            userInput = "";
+            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
+            cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, "Card eject"));
         } else if (posX >= 340 && posX <= 640 && posY >= 345) {
             //balance enquiry
             log.info("pressed balance enquiry");

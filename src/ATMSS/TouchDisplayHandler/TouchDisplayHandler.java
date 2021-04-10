@@ -11,7 +11,7 @@ public class TouchDisplayHandler extends HWHandler {
     //------------------------------------------------------------
     // TouchDisplayHandler
     public TouchDisplayHandler(String id, AppKickstarter appKickstarter) throws Exception {
-	super(id, appKickstarter);
+        super(id, appKickstarter);
     } // TouchDisplayHandler
 
 
@@ -27,6 +27,9 @@ public class TouchDisplayHandler extends HWHandler {
                 handleUpdateDisplay(msg);
                 break;
 
+            case TD_ShowACC:
+                handleShowACC(msg);
+
             default:
                 log.warning(id + ": unknown message type: [" + msg + "]");
         }
@@ -36,6 +39,11 @@ public class TouchDisplayHandler extends HWHandler {
     //------------------------------------------------------------
     // handleUpdateDisplay
     protected void handleUpdateDisplay(Msg msg) {
-	log.info(id + ": update display -- " + msg.getDetails());
+        log.info(id + ": update display -- " + msg.getDetails());
     } // handleUpdateDisplay
+
+
+    protected void handleShowACC(Msg msg) {
+        log.info(id + ": Show acc");
+    }
 } // TouchDisplayHandler

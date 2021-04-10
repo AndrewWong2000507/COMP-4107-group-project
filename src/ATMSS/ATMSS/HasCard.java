@@ -61,6 +61,7 @@ public class HasCard implements ATMState {
             return false;
         }
     } // testLogin
+
     String[] getAcc(BAMSHandler bams, String cardNo) throws BAMSInvalidReplyException, IOException {
         String bamsReply = "";
         bamsReply = bams.getAccounts(cardNo, "cred-1");
