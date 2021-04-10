@@ -196,6 +196,8 @@ public class ATMSS extends AppThread {
                     } catch (BAMSInvalidReplyException | IOException e) {
                         e.printStackTrace();
                     }
+
+                    break;
                 default:
                     log.warning(id + ": unknown message type: [" + msg + "]");
             }

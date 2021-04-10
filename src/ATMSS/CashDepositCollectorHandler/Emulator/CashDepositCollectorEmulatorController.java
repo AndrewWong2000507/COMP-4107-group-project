@@ -40,7 +40,7 @@ public class CashDepositCollectorEmulatorController {
             int thousandDollar = Integer.parseInt(numOf1000.getText());
             if (hundredDollar >= 0 && fiveHundredDollar >= 0 && thousandDollar >= 0) {
                 String total = String.valueOf(100 * hundredDollar + 500 * fiveHundredDollar + 1000 * thousandDollar);
-                infoPanel.appendText("Cash deposited :" + total);
+                infoPanel.appendText("Cash deposited :" + total +"\n");
                 cashDepositCollectorMBox.send(new Msg(id, cashDepositCollectorMBox, Msg.Type.CDC_CashDeposited, total));
             } else {
                 log.warning(id + ": Invalid deposit");
