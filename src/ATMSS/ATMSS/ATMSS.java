@@ -309,7 +309,6 @@ public class ATMSS extends AppThread {
                             cred = "Please select your destination account\n";
                             for (int i = 0; i < acctList.size(); i++) {
                                 cred += i + 1 + ". " + acctList.get(i) + "\n";
-
                             }
                             touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                             log.info("ATM mode : " + mode);
@@ -401,6 +400,7 @@ public class ATMSS extends AppThread {
                             break;
                         case "cash transaction amount":
                             //just some template
+                            boolean success = false;
                             log.info("ATMSS: user Input " + userInput);
                             try {
                                 if (userInput.equals("") || userInput.startsWith("0") || userInput.startsWith(".")) {
@@ -408,14 +408,26 @@ public class ATMSS extends AppThread {
                                     touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                                 } else {
                                     if (Double.parseDouble(userInput) >= 0) {
-                                        bamsHandler.transfer(cardNo, "", currAcc, destAcc, userInput);
-                                        System.out.println("Transfer Success!");
+                                        double getTransAmount = bamsHandler.transfer(cardNo, "", currAcc, destAcc, userInput);
+
+                                        if(getTransAmount > 0 ){
+                                            success = true;
+                                        }
+                                        if(success){
+                                            log.info("Transfer Success");
+                                        }else{
+                                            log.info("Client do not have enough balance");
+                                        }
                                     }
                                     //send to td transaction success
                                     log.info("ATMSS: transfer finished");
                                     double enquiry1 = bamsHandler.enquiry(cardNo, currAcc, "");
                                     double enquiry2 = bamsHandler.enquiry(cardNo, destAcc, "");
-                                    cred = "Transfer complete\n\nCurrent account " + currAcc + " balance : " + enquiry1 + "\n\nDestination account " + destAcc + " balance : " + enquiry2;
+                                    if(success){
+                                    cred = "Transfer complete\n\n"+"Current account " + currAcc + " balance : " + enquiry1 + "\n\nDestination account " + destAcc + " balance : " + enquiry2;
+                                    }else{
+                                        cred = "Transfer Failed, amount no Change\n\n"+"Current account " + currAcc + " balance : " + enquiry1 + "\n\nDestination account " + destAcc + " balance : " + enquiry2;
+                                    }
                                     touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                                 }
                                 userInput = "";
