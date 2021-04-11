@@ -4,6 +4,9 @@ import ATMSS.BAMSHandler.BAMSHandler;
 import ATMSS.BAMSHandler.BAMSInvalidReplyException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class HasCard implements ATMState {
 
@@ -63,13 +66,12 @@ public class HasCard implements ATMState {
         }
     } // testLogin
 
-    String[] getAcc(BAMSHandler bams, String cardNo) throws BAMSInvalidReplyException, IOException {
+    List<String> getAcc(BAMSHandler bams, String cardNo) throws BAMSInvalidReplyException, IOException {
         String bamsReply = "";
         bamsReply = bams.getAccounts(cardNo, "cred-1");
-        String[] accts = bamsReply.split(" ");
-        atmMachine.currAcc = accts[0];
-        System.out.println(accts[0]);
-        return accts;
+        String[] replys = bamsReply.split(" ");
+        atmMachine.currAcc = replys[0];
+        return new ArrayList<>(Arrays.asList(replys));
     }
 
 }
