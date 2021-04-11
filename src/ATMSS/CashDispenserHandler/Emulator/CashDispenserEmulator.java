@@ -2,6 +2,7 @@ package ATMSS.CashDispenserHandler.Emulator;
 
 import ATMSS.ATMSSStarter;
 import ATMSS.CashDispenserHandler.CashDispenserHandler;
+import AppKickstarter.misc.Msg;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -43,4 +44,13 @@ public class CashDispenserEmulator extends CashDispenserHandler {
         myStage.show();
     }
 
+    @Override
+    protected void dispenseCash(Msg msg) {
+        log.info(msg.getDetails());
+        String[] cash = msg.getDetails().split("/");
+        cashDispenserEmulatorController.cashOut$100.setText(cash[2]);
+        cashDispenserEmulatorController.cashOut$500.setText(cash[1]);
+        cashDispenserEmulatorController.cashOut$1000.setText(cash[0]);
+        cashDispenserEmulatorController.cashOutTotal.setText(cash[3]);
+    }
 }

@@ -13,7 +13,7 @@ import java.util.*;
 //======================================================================
 // ATMSS
 public class ATMSS extends AppThread {
-    private int pollingTime;
+    private final int pollingTime;
     private MBox cardReaderMBox;
     private MBox keypadMBox;
     private MBox touchDisplayMBox;
@@ -35,15 +35,17 @@ public class ATMSS extends AppThread {
     private String mode = "";
     protected String[] acctList;
     protected String currAcc;
-    public int transferStageCount = 0;
+    public int count = 0;
     private String destAcc = "";
 
-    private String[] accNo = {"0", "1"}; //temp
+    //changed
+    private final int p = 0;
+    private final String amount = "";
 
 
     //Create BAMSHandler
     protected BAMSHandler bamsHandler;
-    private String urlPrefix = "http://cslinux0.comp.hkbu.edu.hk/comp4107_20-21_grp12/BAMS.php";
+    private final String urlPrefix = "http://cslinux0.comp.hkbu.edu.hk/comp4107_20-21_grp12/BAMS.php";
 
     //Create ATM state
     ATMState atmState;
@@ -265,6 +267,7 @@ public class ATMSS extends AppThread {
         } else if (atmState == hasCorrectPin) {
             log.info("ATMSS state: has correct PIN");
             String key = msg.getDetails();
+            String cred = "";
             switch (key) {
                 case "0":
                 case "1":
@@ -286,12 +289,22 @@ public class ATMSS extends AppThread {
                         case "cash deposit":
                             cashDepositCollectorMBox.send(new Msg(id, mbox, Msg.Type.CDC_CashDepositorOpen, ""));
                             resetMode();
+                            userInput = "";
+                            cred = "Cash deposit process is cancelled. \nDeposit collector is closing";
+                            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+                            break;
+                        case "cash transaction":
+                            resetMode();
+                            userInput = "";
+                            cred = "Cash transaction process is cancelled.";
+                            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                             break;
                         case "cash transaction amount":
+                            //step back to ask dest acc step
                             mode = "cash transaction";
+                            destAcc = "";
                             //Ask user click the account
-                            String cred = "Which is your destination Account?\n";
-
+                            cred = "Please select your destination account\n";
                             for (int i = 0; i < acctList.length; i++) {
                                 cred += i + 1 + ". " + acctList[i] + "\n";
 
@@ -299,7 +312,14 @@ public class ATMSS extends AppThread {
                             touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                             log.info("ATM mode : " + mode);
                             break;
+                        case "cash withdrawal":
+                            userInput = "";
+                            cred = "Withdrawal Process cancelled";
+                            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+                            resetMode();
+                            break;
                         default:
+                            userInput = "";
                             log.info("Process canceled");
                             resetMode();
                     }
@@ -307,14 +327,33 @@ public class ATMSS extends AppThread {
                 case "Enter":
                     switch (mode) {
                         case "cash withdrawal":
-                            //just some template
+
                             log.info("ATMSS: user Input " + userInput);
                             try {
-                                if (Double.parseDouble(userInput) % 100 == 0 && Double.parseDouble(userInput) > 0) {
-                                    //only can get $100,$500 and $1000
-                                    bamsHandler.withdraw(cardNo, accNo[0], "", userInput);
-                                    resetMode();
+                                int outAmount = Integer.parseInt(userInput);  //test
+                                if (outAmount % 100 == 0) {
+                                    String data = "";
+                                    //this will be the $1000
+                                    data += outAmount / 1000 + "/";
+                                    //this will be the $500
+                                    data += (outAmount % 1000) / 500 + "/";
+                                    //this will be the $100
+                                    data += ((outAmount % 1000) % 500) / 100 + "/";
+                                    //this will be the total
+                                    data += userInput;
+                                    System.out.println(data);
+                                    cashDispenserMBox.send(new Msg(id, mbox, Msg.Type.CD_CashDispense, data));
+                                    bamsHandler.withdraw(cardNo, currAcc, "", userInput);
+                                    double enquiry = bamsHandler.enquiry(cardNo, currAcc, "");
+                                    cred = "Withdrawal success. Please collect cash from the dispenser.\nCurrent account " + currAcc + " balance : " + enquiry;
+                                    touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+                                } else {
+                                    cred = "Invalid withdrawal amount. ATM only provide $100, $500 and $1000 cash\nWithdrawal process cancelled.";
+                                    touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                                 }
+                                userInput = "";
+                                resetMode();
+                                break;
                             } catch (BAMSInvalidReplyException | IOException e) {
                                 log.info("ATMSS: Error");
                                 resetMode();
@@ -323,8 +362,14 @@ public class ATMSS extends AppThread {
                         case "cash transaction":
                             //Ask user choice the target account
                             int i = Integer.parseInt(userInput);
-                            String cred = "";
-                            destAcc = acctList[i - 1];
+                            if (i - 1 > acctList.length) {
+                                cred = "Invalid option! This card only contain " + acctList.length + " account(s).\nCurrent account: " + currAcc + "\nTransaction is cancelled. Please try again.";
+                                touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+                                resetMode();
+                                userInput = "";
+                            } else {
+                                destAcc = acctList[i - 1];
+                            }
                             if (currAcc.equals(destAcc)) {
                                 //when choosing same ac as currACC
                                 log.info(id + ": Cannot transfer from same acc to same acc");
@@ -363,7 +408,10 @@ public class ATMSS extends AppThread {
                             }
                             break;
                         default:
+                            userInput = "";
                             log.info("ATMSS: Please choose the service type");
+                            cred = "Please select the required service";
+                            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                             //send the msg to display
                     }
                     break;
@@ -402,11 +450,15 @@ public class ATMSS extends AppThread {
             //cash deposit
             log.info("pressed cash deposit");
             cashDepositCollectorMBox.send(new Msg(id, mbox, Msg.Type.CDC_CashDepositorOpen, ""));
+            String cred = "Please deposit cash into the collector";
+            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             mode = "cash deposit";
             log.info("ATM mode : " + mode);
         } else if (posX <= 300 && posY >= 345 && atmState == hasCorrectPin) {
             //cash withdrawal
             log.info("pressed cash withdrawal");
+            String cred = "Please enter the amount to be withdrawn";
+            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             mode = "cash withdrawal";
             log.info("ATM mode : " + mode);
         } else if (posX <= 300 && posY >= 275 && atmState == hasCorrectPin) {

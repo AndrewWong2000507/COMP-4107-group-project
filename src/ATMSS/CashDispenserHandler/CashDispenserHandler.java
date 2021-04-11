@@ -14,10 +14,16 @@ public class CashDispenserHandler extends HWHandler {
     @Override
     protected void processMsg(Msg msg) {
         switch (msg.getType()) {
-
+            case CD_CashDispense:
+                dispenseCash(msg);
+                break;
             default:
                 log.warning(id + ": unknown message type: [" + msg + "]");
         }
+    }
+
+    protected void dispenseCash(Msg msg) {
+        log.info(id + ": dispense Cash -- " + msg.getDetails());
     }
 
 }

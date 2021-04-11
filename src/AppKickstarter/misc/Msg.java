@@ -97,8 +97,6 @@ public class Msg {
         /** Cash Dispense */  CD_CashDispense,
         /** Open Cash Depositor */  CDC_CashDepositorOpen,
         /** Cash deposited  */  CDC_CashDeposited,
-        /** Print Advice */  AP_Print,
-        /** Advice Collected */  AP_Collected,
         /** Show information on touch screen */  TD_ShowScreen,
     } // Type
 } // Msg
