@@ -13,10 +13,14 @@ public class AdvicePrinterHandler extends HWHandler {
     protected void processMsg(Msg msg) {
         switch (msg.getType()) {
             case AP_print:
-                System.out.println(msg.getDetails());
+                handlePrint(msg);
                 break;
             default:
                 log.warning(id + ": unknown message type: [" + msg + "]");
         }
+    }
+
+    protected void handlePrint(Msg msg) {
+        log.info(id + ": confirm Log out , printing advice slip");
     }
 }

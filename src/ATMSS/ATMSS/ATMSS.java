@@ -36,18 +36,14 @@ public class ATMSS extends AppThread {
     boolean outOfCash = false;
     private String userInput = "";
     private String mode = "";
+
     //acc List changed to array list as transfer press 6 -> i-1 = 5 >= 5 and have bug
     protected List<String> acctList;
     protected String currAcc;
     public int count = 0;
     private String destAcc = "";
-    private String toPrint ="";
+    private String toPrint = "";
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-
-
-    //changed
-    private final int p = 0;
-    private final String amount = "";
 
 
     //Create BAMSHandler
@@ -92,13 +88,16 @@ public class ATMSS extends AppThread {
         pin = "";
     }
 
-    public void resetPrint(){toPrint = "";}
+    public void resetPrint() {
+        toPrint = "";
+    }
 
     public void resetAll() {
         resetCount();
         resetPin();
         resetAccList();
         resetMode();
+        resetPrint();
     }
 
     public void insertCard() {
@@ -212,7 +211,7 @@ public class ATMSS extends AppThread {
                     try {
                         bamsHandler.deposit(cardNo, currAcc, "", msg.getDetails());
                         //record Deposit
-                        toPrint += dtf.format(LocalDateTime.now()) + " User deposit:" +msg.getDetails()+ " From:" + currAcc+"\n";
+                        toPrint += dtf.format(LocalDateTime.now()) + " User deposit:" + msg.getDetails() + " From:" + currAcc + "\n";
                         resetMode();
                         double enquiry = bamsHandler.enquiry(cardNo, currAcc, "");
                         String cred = "Deposit Success!\nAmount:" + msg.getDetails() + "\nCard No. : " + cardNo + "\nAccount : " + currAcc + "\nBalance : $" + enquiry + "\n";
@@ -326,6 +325,7 @@ public class ATMSS extends AppThread {
                             cred = "Please select your destination account\n";
                             for (int i = 0; i < acctList.size(); i++) {
                                 cred += i + 1 + ". " + acctList.get(i) + "\n";
+
                             }
                             touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                             log.info("ATM mode : " + mode);
@@ -368,7 +368,7 @@ public class ATMSS extends AppThread {
                                         bamsHandler.withdraw(cardNo, currAcc, "", userInput);
                                         double enquiry = bamsHandler.enquiry(cardNo, currAcc, "");
                                         //Record the print statement to printer
-                                        toPrint += dtf.format(LocalDateTime.now()) + " User withdrawal:" + outAmount + " From:" + currAcc+"\n";
+                                        toPrint += dtf.format(LocalDateTime.now()) + " User withdrawal:" + outAmount + " From:" + currAcc + "\n";
                                         cred = "Withdrawal success. Please collect cash from the dispenser.\nCurrent account " + currAcc + " balance : " + enquiry;
                                         touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                                     } else {
@@ -429,13 +429,13 @@ public class ATMSS extends AppThread {
                                     if (Double.parseDouble(userInput) >= 0) {
                                         double getTransAmount = bamsHandler.transfer(cardNo, "", currAcc, destAcc, userInput);
 
-                                        if(getTransAmount > 0 ){
+                                        if (getTransAmount > 0) {
                                             success = true;
                                         }
-                                        if(success){
-                                            toPrint += dtf.format(LocalDateTime.now()) + " User transfer:" + userInput + " From:" + currAcc+" To:"+destAcc+"\n";
+                                        if (success) {
+                                            toPrint += dtf.format(LocalDateTime.now()) + " User transfer:" + userInput + " From:" + currAcc + " To:" + destAcc + "\n";
                                             log.info("Transfer Success");
-                                        }else{
+                                        } else {
                                             log.info("Client do not have enough balance");
                                         }
                                     }
@@ -443,10 +443,10 @@ public class ATMSS extends AppThread {
                                     log.info("ATMSS: transfer finished");
                                     double enquiry1 = bamsHandler.enquiry(cardNo, currAcc, "");
                                     double enquiry2 = bamsHandler.enquiry(cardNo, destAcc, "");
-                                    if(success){
-                                    cred = "Transfer complete\n\n"+"Current account " + currAcc + " balance : " + enquiry1 + "\n\nDestination account " + destAcc + " balance : " + enquiry2;
-                                    }else{
-                                        cred = "Transfer Failed, amount no Change\n\n"+"Current account " + currAcc + " balance : " + enquiry1 + "\n\nDestination account " + destAcc + " balance : " + enquiry2;
+                                    if (success) {
+                                        cred = "Transfer complete\n\n" + "Current account " + currAcc + " balance : " + enquiry1 + "\n\nDestination account " + destAcc + " balance : " + enquiry2;
+                                    } else {
+                                        cred = "Transfer Failed, amount no Change\n\n" + "Current account " + currAcc + " balance : " + enquiry1 + "\n\nDestination account " + destAcc + " balance : " + enquiry2;
                                     }
                                     touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                                 }
@@ -481,13 +481,13 @@ public class ATMSS extends AppThread {
                 default:
                     break;
             }
-        } else if(atmState == noCard) {
+        } else if (atmState == noCard) {
             if (msg.getDetails().compareToIgnoreCase("Cancel") == 0) {
                 cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, ""));
             } else if (msg.getDetails().compareToIgnoreCase("1") == 0) {
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
             }
-        }else{
+        } else {
             cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, ""));
             String cred = "ATM currently unavailable";
             touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
@@ -534,7 +534,9 @@ public class ATMSS extends AppThread {
             log.info("pressed logout");
             //Send to Printer
             advicePrinterMBox.send(new Msg(id, mbox, Msg.Type.AP_print, toPrint));
-            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "Confirmation"));
+            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
+            resetAll();
+            this.ejectCard();
         } else if (posX >= 340 && posX <= 640 && posY >= 345 && atmState == hasCorrectPin) {
             //balance enquiry
             log.info("pressed balance enquiry");

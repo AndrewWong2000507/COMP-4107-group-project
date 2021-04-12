@@ -5,6 +5,8 @@ import AppKickstarter.AppKickstarter;
 import AppKickstarter.misc.Msg;
 
 public class CashDispenserHandler extends HWHandler {
+    private double inventory = 10000000;
+
     public CashDispenserHandler(String id, AppKickstarter appKickstarter) {
         super(id, appKickstarter);
         this.id = id;
@@ -20,6 +22,10 @@ public class CashDispenserHandler extends HWHandler {
             default:
                 log.warning(id + ": unknown message type: [" + msg + "]");
         }
+    }
+
+    protected void checkInventory(Msg msg) {
+
     }
 
     protected void dispenseCash(Msg msg) {

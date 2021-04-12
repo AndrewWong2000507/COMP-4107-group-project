@@ -1,6 +1,7 @@
 package ATMSS.AdvicePrinterHandler.Emulator;
 
 import ATMSS.ATMSSStarter;
+import AppKickstarter.misc.Msg;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -43,4 +44,8 @@ public class AdvicePrinterEmulator extends AdvicePrinterHandler {
         myStage.show();
     }
 
+    @Override
+    protected void handlePrint(Msg msg) {
+        advicePrinterEmulatorController.advicePrintArea.setText(msg.getDetails());
+    }
 }
