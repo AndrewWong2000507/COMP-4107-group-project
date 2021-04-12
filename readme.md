@@ -3,13 +3,15 @@
 This is a HKBU COMP-4107 group-project created by
 - 18231497 Elliot, Chan Kwun Lam
 - 18221823 Andrew, Wong Yiu Cheong
+- 18222137 Joe, Lau Cho Ho
+- 19221266 NG Wai Kwong
 
 The project is classic and normal ATM system. Allow user 
 - Login with ATM Card
-- Enquary
-- WithDraw Cash from Bank Account
-- Deposit Cash to Bank Account
-- Transfer Money to another Bank Account
+- Balance enquiry
+- WithDraw Cash from Bank Account within same card
+- Deposit Cash to Bank Account within same card
+- Transfer Money to another Bank Account within same card
 ## How to Use
 
 ### Login
