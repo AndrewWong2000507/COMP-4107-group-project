@@ -37,10 +37,9 @@ public class ATMSS extends AppThread {
     private String userInput = "";
     private String mode = "";
 
-    //acc List changed to array list as transfer press 6 -> i-1 = 5 >= 5 and have bug
     protected List<String> acctList;
     protected String currAcc;
-    public int count = 0;
+
     private int[] cashInventory = new int[3];
     private String destAcc = "";
     private String toPrint = "";
@@ -227,6 +226,20 @@ public class ATMSS extends AppThread {
                     }
 
                     break;
+                case Buzzer_ON:
+                    log.info("Buzzer ON" + msg.getDetails());
+                    break;
+
+                case Buzzer_OFF:
+                    log.info("Buzzer OFF" + msg.getDetails());
+                    break;
+
+                case CD_CloseBuzzer:
+                    buzzerMBox.send(new Msg(id, mbox, Msg.Type.Buzzer_OFF, ""));
+                    break;
+                case CDC_CloseBuzzer:
+                    buzzerMBox.send(new Msg(id, mbox, Msg.Type.Buzzer_OFF, ""));
+                    break;
                 default:
                     log.warning(id + ": unknown message type: [" + msg + "]");
             }
@@ -399,6 +412,8 @@ public class ATMSS extends AppThread {
                                         //Record the print statement to printer
                                         toPrint += dtf.format(LocalDateTime.now()) + " User withdrawal:" + outAmount + " From:" + currAcc + "\n";
                                         cred = "Withdrawal success. Please collect cash from the dispenser.\nCurrent account " + currAcc + " balance : " + enquiry;
+                                        //buzzer on
+                                        buzzerMBox.send(new Msg(id, mbox, Msg.Type.Buzzer_ON, "buzzer on"));
                                         touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
                                     } else {
                                         cred = "Invalid withdrawal amount. ATM only provide $100, $500 and $1000 cash\nWithdrawal process cancelled.";
@@ -542,6 +557,8 @@ public class ATMSS extends AppThread {
             String cred = "Please deposit cash into the collector";
             touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             mode = "cash deposit";
+            //buzzer on
+            buzzerMBox.send(new Msg(id, mbox, Msg.Type.Buzzer_ON, "buzzer on"));
             log.info("ATM mode : " + mode);
         } else if (posX <= 300 && posY >= 345 && atmState == hasCorrectPin) {
             //cash withdrawal

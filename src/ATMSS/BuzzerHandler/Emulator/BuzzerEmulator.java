@@ -43,4 +43,15 @@ public class BuzzerEmulator extends BuzzerHandler {
         myStage.show();
     }
 
+    @Override
+    protected void buzzerOn() {
+        super.buzzerOn();
+        buzzerEmulatorController.updateBuzzerStatus("ON");
+    }
+
+    @Override
+    protected void buzzerOff() {
+        super.buzzerOff();
+        buzzerEmulatorController.updateBuzzerStatus("OFF");
+    }
 }

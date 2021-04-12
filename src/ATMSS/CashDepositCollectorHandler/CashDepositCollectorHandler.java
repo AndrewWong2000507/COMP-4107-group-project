@@ -20,6 +20,8 @@ public class CashDepositCollectorHandler extends HWHandler {
             case CDC_CashDeposited:
                 atmss.send(new Msg(id, mbox, Msg.Type.CDC_CashDeposited, msg.getDetails()));
                 break;
+            case CDC_CloseBuzzer:
+                atmss.send(new Msg(id, mbox, Msg.Type.CDC_CloseBuzzer, ""));
             default:
                 log.warning(id + ": unknown message type: [" + msg + "]");
         }

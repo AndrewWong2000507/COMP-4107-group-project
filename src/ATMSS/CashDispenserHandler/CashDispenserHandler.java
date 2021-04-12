@@ -26,6 +26,11 @@ public class CashDispenserHandler extends HWHandler {
             case CD_GetInventoryForDispense:
                 getInventory();
                 break;
+
+            case CD_CloseBuzzer:
+                atmss.send(new Msg(id, mbox, Msg.Type.CD_CloseBuzzer, ""));
+                break;
+
             default:
                 log.warning(id + ": unknown message type: [" + msg + "]");
         }
@@ -35,7 +40,7 @@ public class CashDispenserHandler extends HWHandler {
         log.info(id + ": dispense Cash -- " + msg.getDetails());
     }
 
-    protected void getInventory(){
+    protected void getInventory() {
         log.info(id + ": get invertory");
     }
 

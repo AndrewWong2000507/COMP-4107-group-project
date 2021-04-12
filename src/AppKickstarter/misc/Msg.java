@@ -97,9 +97,13 @@ public class Msg {
         /** Cash Dispense */  CD_CashDispense,
         /** Get Inventory for dispense*/  CD_GetInventoryForDispense,
         /** Update Dispenser */  CD_UpdateDispenser,
-        /** Inventory pressed */			CD_InventoryPressed,
+        /** Inventory pressed */	CD_InventoryPressed,
+        /** Close Buzzer after taking money */     CD_CloseBuzzer,
         /** Open Cash Depositor */  CDC_CashDepositorOpen,
         /** Cash deposited  */  CDC_CashDeposited,
+        /** Close Buzzer after taking money */     CDC_CloseBuzzer,
+        /** Buzzer on */        Buzzer_ON,
+        /** Buzzer off */       Buzzer_OFF,
         /** Show information on touch screen */  TD_ShowScreen, Unavailiable, AP_print,
     } // Type
 } // Msg

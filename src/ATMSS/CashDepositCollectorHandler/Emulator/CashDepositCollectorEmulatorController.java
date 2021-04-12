@@ -68,5 +68,6 @@ public class CashDepositCollectorEmulatorController {
         numOf1000.setText("0");
         numOf100.setText("0");
         numOf500.setText("0");
+        cashDepositCollectorMBox.send(new Msg(id, cashDepositCollectorMBox, Msg.Type.CDC_CloseBuzzer, ""));
     }
 }

@@ -16,9 +16,25 @@ public class BuzzerHandler extends HWHandler {
 
     @Override
     protected void processMsg(Msg msg) {
-        switch (msg.getType()){
+        switch (msg.getType()) {
+            case Buzzer_ON:
+                atmss.send(new Msg(id, mbox, Msg.Type.Buzzer_ON, msg.getDetails()));
+                buzzerOn();
+                break;
+            case Buzzer_OFF:
+                atmss.send(new Msg(id, mbox, Msg.Type.Buzzer_OFF, msg.getDetails()));
+                buzzerOff();
+                break;
             default:
                 log.warning(id + ": unknown message type: [" + msg + "]");
         }
+    }
+
+    protected void buzzerOn() {
+        log.info(id + ": buzzer is on");
+    }
+
+    protected void buzzerOff() {
+        log.info(id + ": buzzer is off");
     }
 }

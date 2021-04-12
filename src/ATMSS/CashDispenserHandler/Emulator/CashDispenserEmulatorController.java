@@ -37,6 +37,7 @@ public class CashDispenserEmulatorController {
         cashOut$500.setText("");
         cashOut$1000.setText("");
         cashOutTotal.setText("");
+        cashDispenserMBox.send(new Msg(id, cashDispenserMBox, Msg.Type.CD_CloseBuzzer, ""));
     }
 
     public String getInventory() {
