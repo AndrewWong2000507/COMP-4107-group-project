@@ -52,7 +52,6 @@ public class ATMSS extends AppThread {
     //acc List changed to array list as transfer press 6 -> i-1 = 5 >= 5 and have bug
     protected List<String> acctList;
     protected String currAcc;
-    public int count = 0;
     private int[] cashInventory = new int[3];
     private String destAcc = "";
     private String toPrint = "";
@@ -60,7 +59,7 @@ public class ATMSS extends AppThread {
 
     //Create BAMSHandler
     protected BAMSHandler bamsHandler;
-
+    boolean correctPinEntered = false;
     /**
      * Store the current ATM State
      */
