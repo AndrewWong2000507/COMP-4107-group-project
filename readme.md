@@ -54,35 +54,47 @@ For checking what Accounts are user are accessable, simply click **Get Account**
 ### WithDraw
 After the login Process, user are allowed to use the withdrawal function
 1. Select which Account you want to withdraw
+
+
 ![](https://i.imgur.com/s6ul2NM.png)
 
 2. Click **Cash Withdrawal**
+
 ![](https://i.imgur.com/UhrQxKk.png)
 
 3. Import amount you want to withdraw and press Enter
+
 ![](https://i.imgur.com/WdElVNa.png)
 
 4. Done!
+
 ![](https://i.imgur.com/XhhPB8k.png)
 
 5. Do not forget to collect your money
+
 ![](https://i.imgur.com/TO03O7J.png)
 
 ### Deposit
 After the login Process, user are allowed to use the Deposit function
 
 1. Select which Account you want to deposit
+
 ![](https://i.imgur.com/1etVpaO.png)
 
 2. Click Cash Deposit
+ 
+
 ![](https://i.imgur.com/GsOM8KD.png)
 
 
 3. Insert the amount you want to deposit
+
 ![](https://i.imgur.com/jaYgAQc.png)
 
 4. Done!
+
 ![](https://i.imgur.com/BhQWULF.png)
+
 ![](https://i.imgur.com/paZ5nhQ.png)
 
 
@@ -94,10 +106,13 @@ After the login Process, user are allowed to use the Transaction function
 ![](https://i.imgur.com/vJ4OJiA.png)
 
 2. Click CashTransaction
+3. 
 ![](https://i.imgur.com/v5rT1uE.png)
 
 3. insert Which account you want to insert on KeyPad
+4. 
 ![](https://i.imgur.com/1eTzbZT.png)
 
 4. insert amount you want to transfer on keyPad
+5. 
 ![](https://i.imgur.com/O2RK1mK.png)
