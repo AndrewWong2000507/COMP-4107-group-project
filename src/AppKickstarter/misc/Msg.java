@@ -104,6 +104,8 @@ public class Msg {
         /** Close Buzzer after taking money */     CDC_CloseBuzzer,
         /** Buzzer on */        Buzzer_ON,
         /** Buzzer off */       Buzzer_OFF,
-        /** Show information on touch screen */  TD_ShowScreen, Unavailiable, AP_print,
+        /** Show information on touch screen */  TD_ShowScreen,
+        /** ATMSS is unavailable */ Unavailiable,
+        /** Order the Advice Printer to print advice slip*/ AP_print,
     } // Type
 } // Msg

@@ -15,6 +15,10 @@ import java.util.*;
 
 //======================================================================
 // ATMSS
+
+/**
+ * This is the class of the system of ATM which coordinator different handlers of ATM hardware component
+ */
 public class ATMSS extends AppThread {
     private final int pollingTime;
     private MBox cardReaderMBox;
@@ -25,21 +29,32 @@ public class ATMSS extends AppThread {
     private MBox buzzerMBox;
     private MBox cashDepositCollectorMBox;
 
+    /**
+     * This is the different state of the ATM
+     * Implemented the state design pattern
+     * noCard => There are no Card in the ATMMachine
+     * hasCard => There are Card in the ATMMachine
+     * hasCorrentPin => User inserted the correct Pin, and successfully login
+     * unAvailable => ATMMachine facing fetal error and cannot repair or ignore
+     */
     ATMState hasCard;
     ATMState noCard;
     ATMState hasCorrectPin;
     ATMState unAvailable;
 
+    /**
+     * Global Variables that are widely used in the ATMMachine
+     * Usually Temporary and will reset after some user actions
+     * All variables need to be reset once user leave/logout/eject the ATM machine
+     */
     private String pin = "";
     public String cardNo = "";
     public int pinCounter = 0;
     boolean outOfCash = false;
     private String userInput = "";
     private String mode = "";
-
     protected List<String> acctList;
     protected String currAcc;
-
     private int[] cashInventory = new int[3];
     private String destAcc = "";
     private String toPrint = "";
@@ -47,14 +62,24 @@ public class ATMSS extends AppThread {
 
 
     //Create BAMSHandler
+    /**
+     * Connect BAMS
+     */
     protected BAMSHandler bamsHandler;
 
     //Create ATM state
+    /**
+     * Store the current ATM State
+     */
     ATMState atmState;
     boolean correctPinEntered = false;
 
-    //------------------------------------------------------------
-    // ATMSS
+    /**
+     * Constructor for ATMSS
+     * @param id id of ATMSS
+     * @param appKickstarter a reference of appKickstarter
+     * @throws Exception
+     */
     public ATMSS(String id, AppKickstarter appKickstarter) throws Exception {
         super(id, appKickstarter);
         pollingTime = Integer.parseInt(appKickstarter.getProperty("ATMSS.PollingTime"));
@@ -68,30 +93,48 @@ public class ATMSS extends AppThread {
     } // ATMSS
 
     //Change ATM state
+
+    /**
+     * Method to change the ATM State
+     * @param newATMState state of ATM base on differnet action include card injected,log in,unavailable
+     */
     void setATMState(ATMState newATMState) {
         atmState = newATMState;
     }
 
+    /**
+     * Method to reset Mode variable
+     */
     public void resetMode() {
         mode = "";
     }
-
+    /**
+     * Method to reset Account List variable
+     */
     public void resetAccList() {
         acctList = new ArrayList<>();
     }
-
+    /**
+     * Method to reset counter variable
+     */
     public void resetCount() {
         pinCounter = 0;
     }
-
+    /**
+     * Method to reset Pin variable, trigger ever login
+     */
     public void resetPin() {
         pin = "";
     }
-
+    /**
+     * Method to reset Printer String variable, trigger ever print function
+     */
     public void resetPrint() {
         toPrint = "";
     }
-
+    /**
+     * Method to reset all of above, trigger when eject/logout/error
+     */
     public void resetAll() {
         resetCount();
         resetPin();
@@ -100,30 +143,48 @@ public class ATMSS extends AppThread {
         resetPrint();
     }
 
+    /**
+     * Method to handle Card insert, different when ATM are at different state
+     */
     public void insertCard() {
         atmState.insertCard();
     }
 
+    /**
+     * Method to handle Card eject, different when ATM are at different state
+     */
     public void ejectCard() {
         atmState.ejectCard();
     }
-
+    /**
+     * Method to handle Pin insert, different when ATM are at different state
+     * User are allowed to try maximum three times
+     */
     public void insertPin(String CardNum, String Pin) {
         atmState.insertPin(CardNum, Pin);
     }
-
+    /**
+     * Method to return a hasCard Sate
+     */
     public ATMState getYesCardState() {
         return hasCard;
     }
-
+    /**
+     * Method to return a noCard Sate
+     */
     public ATMState getNoCardState() {
         return noCard;
     }
-
+    /**
+     * Method to return a hasCorrectPin Sate
+     */
     public ATMState getHasPin() {
         return hasCorrectPin;
     }
 
+    /**
+     * Method to return a Unavailable Sate
+     */
     public ATMState getUnAvailable() {
         return unAvailable;
     }
@@ -132,6 +193,11 @@ public class ATMSS extends AppThread {
 
     //------------------------------------------------------------
     // run
+
+    /**
+     * Method that start to run ATMSS ,get the mail box of different handler and
+     * initiate the ATMSS mail box to receive and handle different massage signal
+     */
     public void run() {
         Timer.setTimer(id, mbox, pollingTime);
         log.info(id + ": starting...");
@@ -250,6 +316,10 @@ public class ATMSS extends AppThread {
         log.info(id + ": terminating...");
     } // run
 
+    /**
+     * Method that get the amount of cash in the ATM before withdraw to ensure enough cash
+     * @param msg message from the dispenser that contain the remaining cash amount
+     */
     private void dispenseCash(Msg msg) {
         String[] cash = msg.getDetails().split("/");
         for (int i = 0; i < 3; i++) {
@@ -260,6 +330,11 @@ public class ATMSS extends AppThread {
 
     //------------------------------------------------------------
     // processKeyPressed
+
+    /**
+     * Method that handle the result of key pressed in different ATM state or service mode
+     * @param msg message of what key is pressed
+     */
     private void processKeyPressed(Msg msg) {
         if (atmState == hasCard) {
             String key = msg.getDetails();
@@ -543,6 +618,11 @@ public class ATMSS extends AppThread {
 
     //------------------------------------------------------------
     // processMouseClicked
+
+    /**
+     * Method that handle the mouse click and make the main menu GUI become interactive to users
+     * @param msg message containing the X and Y position that the mouse clicked on main menu
+     */
     private void processMouseClicked(Msg msg) {
         // *** process mouse click here!!! ***
 
