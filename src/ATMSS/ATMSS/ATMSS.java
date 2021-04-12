@@ -178,6 +178,7 @@ public class ATMSS extends AppThread {
                     this.ejectCard();
                     log.info("CardRemoved: " + msg.getDetails());
                     break;
+
                 case TimesUp:
                     Timer.setTimer(id, mbox, pollingTime);
                     log.info("Poll: " + msg.getDetails());
