@@ -12,7 +12,9 @@ public class AdvicePrinterHandler extends HWHandler {
     @Override
     protected void processMsg(Msg msg) {
         switch (msg.getType()) {
-
+            case AP_print:
+                System.out.println(msg.getDetails());
+                break;
             default:
                 log.warning(id + ": unknown message type: [" + msg + "]");
         }
