@@ -97,6 +97,6 @@ public class Msg {
         /** Cash Dispense */  CD_CashDispense,
         /** Open Cash Depositor */  CDC_CashDepositorOpen,
         /** Cash deposited  */  CDC_CashDeposited,
-        /** Show information on touch screen */  TD_ShowScreen,
+        /** Show information on touch screen */  TD_ShowScreen, Unavailiable,
     } // Type
 } // Msg

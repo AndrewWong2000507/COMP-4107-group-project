@@ -179,6 +179,10 @@ public class ATMSS extends AppThread {
                     log.info("CardRemoved: " + msg.getDetails());
                     break;
 
+                case Unavailiable:
+                    atmState = getUnAvailable();
+                    break;
+
                 case TimesUp:
                     Timer.setTimer(id, mbox, pollingTime);
                     log.info("Poll: " + msg.getDetails());
@@ -461,12 +465,16 @@ public class ATMSS extends AppThread {
                 default:
                     break;
             }
-        } else {
+        } else if(atmState == noCard) {
             if (msg.getDetails().compareToIgnoreCase("Cancel") == 0) {
                 cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, ""));
             } else if (msg.getDetails().compareToIgnoreCase("1") == 0) {
                 touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_UpdateDisplay, "BlankScreen"));
             }
+        }else{
+            cardReaderMBox.send(new Msg(id, mbox, Msg.Type.CR_EjectCard, ""));
+            String cred = "ATM currently unavailable";
+            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
         }
         // *** The following is an example only!! ***
     }
