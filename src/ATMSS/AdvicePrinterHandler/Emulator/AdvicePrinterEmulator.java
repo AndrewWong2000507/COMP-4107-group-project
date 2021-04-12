@@ -10,6 +10,11 @@ import javafx.stage.Stage;
 import ATMSS.AdvicePrinterHandler.AdvicePrinterHandler;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+/**
+ * This is the class for building Advice Printer Emulator
+ * @author Group 12
+ *
+ * */
 
 
 public class AdvicePrinterEmulator extends AdvicePrinterHandler {
@@ -24,6 +29,10 @@ public class AdvicePrinterEmulator extends AdvicePrinterHandler {
         this.atmssStarter = atmssStarter;
     }
 
+    /**
+     * This method will link the stage with FXML file and controller and start showing the stage
+     * @throws Exception exist on loading the FXML file
+     */
     public void start() throws Exception {
         Parent root;
         myStage = new Stage();
@@ -45,6 +54,9 @@ public class AdvicePrinterEmulator extends AdvicePrinterHandler {
     }
 
     @Override
+    /**
+     * This method receive the message and set the text in message details to the advice printer
+     */
     protected void handlePrint(Msg msg) {
         advicePrinterEmulatorController.advicePrintArea.setText(msg.getDetails());
     }

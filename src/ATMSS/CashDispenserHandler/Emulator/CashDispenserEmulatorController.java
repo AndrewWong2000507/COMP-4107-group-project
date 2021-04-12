@@ -2,6 +2,7 @@ package ATMSS.CashDispenserHandler.Emulator;
 
 import AppKickstarter.AppKickstarter;
 import AppKickstarter.misc.MBox;
+import AppKickstarter.misc.Msg;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -15,7 +16,7 @@ public class CashDispenserEmulatorController {
     private CashDispenserEmulator cashDispenserEmulator;
     private MBox cashDispenserMBox;
 
-    private int[] cashInventory = {100,100,100};
+    private int[] cashInventory = {100, 100, 100};
 
     public TextField cashOut$100;
     public TextField cashOut$500;
@@ -38,12 +39,12 @@ public class CashDispenserEmulatorController {
         cashOutTotal.setText("");
     }
 
-    public String getInventory(){
-        return cashInventory[0] + "/" +cashInventory[1] + "/" + cashInventory[2];
+    public String getInventory() {
+        return cashInventory[0] + "/" + cashInventory[1] + "/" + cashInventory[2];
     }
 
-    protected void dispenseCash(String[] cash){
-        for (int i=0; i<3; i++){
+    protected void dispenseCash(String[] cash) {
+        for (int i = 0; i < 3; i++) {
             cashInventory[i] -= Integer.parseInt(cash[i]);
         }
     }
