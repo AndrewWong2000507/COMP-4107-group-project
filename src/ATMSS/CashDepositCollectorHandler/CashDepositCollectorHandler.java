@@ -4,6 +4,7 @@ import ATMSS.HWHandler.HWHandler;
 import AppKickstarter.AppKickstarter;
 import AppKickstarter.misc.Msg;
 
+
 public class CashDepositCollectorHandler extends HWHandler {
 
     public CashDepositCollectorHandler(String id, AppKickstarter appKickstarter) {
