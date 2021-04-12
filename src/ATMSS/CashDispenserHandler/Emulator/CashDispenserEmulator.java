@@ -52,5 +52,56 @@ public class CashDispenserEmulator extends CashDispenserHandler {
         cashDispenserEmulatorController.cashOut$500.setText(cash[1]);
         cashDispenserEmulatorController.cashOut$1000.setText(cash[0]);
         cashDispenserEmulatorController.cashOutTotal.setText(cash[3]);
+        cashDispenserEmulatorController.dispenseCash(cash);
     }
+
+    protected void getInventory() {
+        atmss.send(new Msg(id, mbox, Msg.Type.CD_InventoryPressed, cashDispenserEmulatorController.getInventory()));
+    }
+
+    //------------------------------------------------------------
+    // handleUpdateDispenser
+    protected void handleUpdateDispenser(Msg msg) {
+        log.info(id + ": update display -- " + msg.getDetails());
+
+        switch (msg.getDetails()) {
+            case "OutOfCash":
+                reloadStage("CashDispenserEmulatorOutOfCash.fxml");
+                break;
+
+            case "Main":
+                reloadStage("CashDispenserEmulator.fxml");
+                break;
+
+            default:
+                log.severe(id + ": update display with unknown display type -- " + msg.getDetails());
+                break;
+        }
+    } // handleUpdateDispenser
+
+    //------------------------------------------------------------
+    // reloadStage
+    private void reloadStage(String fxmlFName) {
+        CashDispenserEmulator touchDisplayEmulator = this;
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    log.info(id + ": loading fxml: " + fxmlFName);
+
+                    Parent root;
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(CashDispenserEmulator.class.getResource(fxmlFName));
+                    root = loader.load();
+                    cashDispenserEmulatorController = (CashDispenserEmulatorController) loader.getController();
+                    cashDispenserEmulatorController.initialize(id, atmssStarter, log, touchDisplayEmulator);
+                    myStage.setScene(new Scene(root));
+                } catch (Exception e) {
+                    log.severe(id + ": failed to load " + fxmlFName);
+                    e.printStackTrace();
+                }
+            }
+        });
+    } // reloadStage
 }

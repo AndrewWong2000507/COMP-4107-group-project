@@ -19,17 +19,29 @@ public class CashDispenserHandler extends HWHandler {
             case CD_CashDispense:
                 dispenseCash(msg);
                 break;
+
+            case CD_UpdateDispenser:
+                handleUpdateDispenser(msg);
+                break;
+
+            case CD_GetInventoryForDispense:
+                getInventory();
+                break;
             default:
                 log.warning(id + ": unknown message type: [" + msg + "]");
         }
     }
 
-    protected void checkInventory(Msg msg) {
-
-    }
-
     protected void dispenseCash(Msg msg) {
         log.info(id + ": dispense Cash -- " + msg.getDetails());
+    }
+
+    protected void getInventory(){
+        log.info(id + ": get invertory");
+    }
+
+    protected void handleUpdateDispenser(Msg msg) {
+        log.info(id + ": update dispenser -- " + msg.getDetails());
     }
 
 }

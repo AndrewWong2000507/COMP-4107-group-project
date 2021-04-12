@@ -41,6 +41,7 @@ public class ATMSS extends AppThread {
     protected List<String> acctList;
     protected String currAcc;
     public int count = 0;
+    private int[] cashInventory = new int[3];
     private String destAcc = "";
     private String toPrint = "";
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -207,6 +208,11 @@ public class ATMSS extends AppThread {
                     quit = true;
                     break;
 
+                case CD_InventoryPressed:
+                    log.info("InventoryPressed: " + msg.getDetails());
+                    dispenseCash(msg);
+                    break;
+
                 case CDC_CashDeposited:
                     try {
                         bamsHandler.deposit(cardNo, currAcc, "", msg.getDetails());
@@ -231,6 +237,13 @@ public class ATMSS extends AppThread {
         log.info(id + ": terminating...");
     } // run
 
+    private void dispenseCash(Msg msg) {
+        String[] cash = msg.getDetails().split("/");
+        for (int i = 0; i < 3; i++) {
+            cashInventory[i] = Integer.parseInt(cash[i]);
+        }
+
+    }
 
     //------------------------------------------------------------
     // processKeyPressed
@@ -354,6 +367,22 @@ public class ATMSS extends AppThread {
                                 } else {
                                     int outAmount = Integer.parseInt(userInput);
                                     if (outAmount % 100 == 0) {
+                                        int cash1000 = Math.min(outAmount / 1000, cashInventory[0]);
+                                        int cash500 = Math.min((outAmount - cash1000 * 1000) / 500, cashInventory[1]);
+
+                                        int cash100 = (outAmount - cash1000 * 1000 - cash500 * 500) / 100;
+                                        if (cash100 > cashInventory[2]) {
+                                            cashDispenserMBox.send(new Msg(id, mbox, Msg.Type.CD_UpdateDispenser, "OutOfCash"));
+                                        } else {
+                                            String data = cash1000 + "/" + cash500 + "/" + cash100 + "/" + outAmount;
+
+                                            cashDispenserMBox.send(new Msg(id, mbox, Msg.Type.CD_CashDispense, data));
+                                            bamsHandler.withdraw(cardNo, currAcc, "", userInput);
+                                            double enquiry = bamsHandler.enquiry(cardNo, currAcc, "");
+                                            cred = "Withdrawal success. Please collect cash from the dispenser.\nCurrent account " + currAcc + " balance : " + enquiry;
+                                            touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
+                                        }
+
                                         String data = "";
                                         //this will be the $1000
                                         data += outAmount / 1000 + "/";
@@ -518,6 +547,8 @@ public class ATMSS extends AppThread {
             //cash withdrawal
             log.info("pressed cash withdrawal");
             String cred = "Please enter the amount to be withdrawn";
+            cashDispenserMBox.send(new Msg(id, mbox, Msg.Type.CD_GetInventoryForDispense, ""));
+
             touchDisplayMBox.send(new Msg(id, mbox, Msg.Type.TD_ShowScreen, cred));
             mode = "cash withdrawal";
             log.info("ATM mode : " + mode);

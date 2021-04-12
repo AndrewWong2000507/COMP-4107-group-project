@@ -14,6 +14,9 @@ public class CashDispenserEmulatorController {
     private Logger log;
     private CashDispenserEmulator cashDispenserEmulator;
     private MBox cashDispenserMBox;
+
+    private int[] cashInventory = {100,100,100};
+
     public TextField cashOut$100;
     public TextField cashOut$500;
     public TextField cashOut$1000;
@@ -35,5 +38,14 @@ public class CashDispenserEmulatorController {
         cashOutTotal.setText("");
     }
 
+    public String getInventory(){
+        return cashInventory[0] + "/" +cashInventory[1] + "/" + cashInventory[2];
+    }
+
+    protected void dispenseCash(String[] cash){
+        for (int i=0; i<3; i++){
+            cashInventory[i] -= Integer.parseInt(cash[i]);
+        }
+    }
 
 }
