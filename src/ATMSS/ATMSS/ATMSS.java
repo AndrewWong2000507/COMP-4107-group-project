@@ -25,18 +25,30 @@ public class ATMSS extends AppThread {
     private MBox buzzerMBox;
     private MBox cashDepositCollectorMBox;
 
+    /**
+     * This is the different state of the ATM
+     * Implemented the state design pattern
+     * noCard => There are no Card in the ATMMachine
+     * hasCard => There are Card in the ATMMachine
+     * hasCorrentPin => User inserted the correct Pin, and successfully login
+     * unAvailable => ATMMachine facing fetal error and cannot repair or ignore
+     */
     ATMState hasCard;
     ATMState noCard;
     ATMState hasCorrectPin;
     ATMState unAvailable;
 
+    /**
+     * Global Variables that are widely used in the ATMMachine
+     * Usually Temporary and will reset after some user actions
+     * All variables need to be reset once user leave/logout/eject the ATM machine
+     */
     private String pin = "";
     public String cardNo = "";
     public int pinCounter = 0;
     boolean outOfCash = false;
     private String userInput = "";
     private String mode = "";
-
     //acc List changed to array list as transfer press 6 -> i-1 = 5 >= 5 and have bug
     protected List<String> acctList;
     protected String currAcc;
@@ -46,16 +58,20 @@ public class ATMSS extends AppThread {
     private String toPrint = "";
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
-
     //Create BAMSHandler
     protected BAMSHandler bamsHandler;
 
-    //Create ATM state
+    /**
+     * Store the current ATM State
+     */
     ATMState atmState;
-    boolean correctPinEntered = false;
 
-    //------------------------------------------------------------
-    // ATMSS
+    /**
+     * Constructor for ATMSS
+     * @param id
+     * @param appKickstarter
+     * @throws Exception
+     */
     public ATMSS(String id, AppKickstarter appKickstarter) throws Exception {
         super(id, appKickstarter);
         pollingTime = Integer.parseInt(appKickstarter.getProperty("ATMSS.PollingTime"));
@@ -69,30 +85,48 @@ public class ATMSS extends AppThread {
     } // ATMSS
 
     //Change ATM state
+
+    /**
+     * Method to change the ATM State
+     * @param newATMState
+     */
     void setATMState(ATMState newATMState) {
         atmState = newATMState;
     }
 
+    /**
+     * Method to reset Mode variable
+     */
     public void resetMode() {
         mode = "";
     }
-
+    /**
+     * Method to reset Account List variable
+     */
     public void resetAccList() {
         acctList = new ArrayList<>();
     }
-
+    /**
+     * Method to reset counter variable
+     */
     public void resetCount() {
         pinCounter = 0;
     }
-
+    /**
+     * Method to reset Pin variable, trigger ever login
+     */
     public void resetPin() {
         pin = "";
     }
-
+    /**
+     * Method to reset Printer String variable, trigger ever print function
+     */
     public void resetPrint() {
         toPrint = "";
     }
-
+    /**
+     * Method to reset all of above, trigger when eject/logout/error
+     */
     public void resetAll() {
         resetCount();
         resetPin();
@@ -101,30 +135,48 @@ public class ATMSS extends AppThread {
         resetPrint();
     }
 
+    /**
+     * Method to handle Card insert, different when ATM are at different state
+     */
     public void insertCard() {
         atmState.insertCard();
     }
 
+    /**
+     * Method to handle Card eject, different when ATM are at different state
+     */
     public void ejectCard() {
         atmState.ejectCard();
     }
-
+    /**
+     * Method to handle Pin insert, different when ATM are at different state
+     * User are allowed to try maximum three times
+     */
     public void insertPin(String CardNum, String Pin) {
         atmState.insertPin(CardNum, Pin);
     }
-
+    /**
+     * Method to return a hasCard Sate
+     */
     public ATMState getYesCardState() {
         return hasCard;
     }
-
+    /**
+     * Method to return a noCard Sate
+     */
     public ATMState getNoCardState() {
         return noCard;
     }
-
+    /**
+     * Method to return a hasCorrectPin Sate
+     */
     public ATMState getHasPin() {
         return hasCorrectPin;
     }
 
+    /**
+     * Method to return a Unavailable Sate
+     */
     public ATMState getUnAvailable() {
         return unAvailable;
     }
