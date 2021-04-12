@@ -12,8 +12,9 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 
-//======================================================================
-// CardReaderEmulator
+/**
+ * This a Card Reader Emulator that emulate the Card Reader on a physical ATM
+ */
 public class CardReaderEmulator extends CardReaderHandler {
     private ATMSSStarter atmssStarter;
     private String id;
@@ -31,6 +32,11 @@ public class CardReaderEmulator extends CardReaderHandler {
 
     //------------------------------------------------------------
     // start
+
+	/**
+	 * This method will link the stage with FXML file and controller and start showing the stage
+	 * @throws Exception exist on loading the FXML file
+	 */
     public void start() throws Exception {
 	Parent root;
 	myStage = new Stage();
@@ -52,8 +58,9 @@ public class CardReaderEmulator extends CardReaderHandler {
     } // CardReaderEmulator
 
 
-    //------------------------------------------------------------
-    // handleCardInsert
+	/**
+	 * This is method handle the Card Insertion
+	 */
     protected void handleCardInsert() {
         // fixme
 	super.handleCardInsert();
@@ -62,8 +69,9 @@ public class CardReaderEmulator extends CardReaderHandler {
     } // handleCardInsert
 
 
-    //------------------------------------------------------------
-    // handleCardEject
+	/**
+	 * This is method handle Card ejection
+	 */
     protected void handleCardEject() {
         // fixme
 	super.handleCardEject();
@@ -72,8 +80,9 @@ public class CardReaderEmulator extends CardReaderHandler {
     } // handleCardEject
 
 
-    //------------------------------------------------------------
-    // handleCardRemove
+	/**
+	 * This is method handle Card Removal
+	 */
     protected void handleCardRemove() {
 	// fixme
 	super.handleCardRemove();

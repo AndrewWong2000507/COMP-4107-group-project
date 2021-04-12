@@ -12,8 +12,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 
-//======================================================================
-// CardReaderEmulatorController
+/**
+ * This is the class for handling the Advice Printer
+ * @author Group 12
+ * */
 public class CardReaderEmulatorController {
     private String id;
     private AppKickstarter appKickstarter;
@@ -25,8 +27,13 @@ public class CardReaderEmulatorController {
     public TextArea cardReaderTextArea;
 
 
-    //------------------------------------------------------------
-    // initialize
+    /**
+     * This method initialize the controller
+     * @param id name of the appThread
+     * @param appKickstarter a reference to our AppKickstarter
+     * @param log the logger will be used to log
+     * @param cardReaderEmulator defining the emulator this controller is linked with
+     */
     public void initialize(String id, AppKickstarter appKickstarter, Logger log, CardReaderEmulator cardReaderEmulator) {
         this.id = id;
         this.appKickstarter = appKickstarter;
@@ -36,8 +43,10 @@ public class CardReaderEmulatorController {
     } // initialize
 
 
-    //------------------------------------------------------------
-    // buttonPressed
+    /**
+     * This method is to handle if the button on the emulator is clicked
+     * @param actionEvent
+     */
     public void buttonPressed(ActionEvent actionEvent) {
         Button btn = (Button) actionEvent.getSource();
 
@@ -65,13 +74,18 @@ public class CardReaderEmulatorController {
                     cardStatusField.setText("Card Inserted, Please Input your Pin");
                 }
                 break;
-
-
+            case "Eject Card":
+                if (cardStatusField.getText().compareTo("Card Inserted, Please Input your Pin") == 0) {
+                    cardReaderTextArea.appendText("Removing card\n");
+                    cardReaderMBox.send(new Msg(id, cardReaderMBox, Msg.Type.CR_EjectCard, cardNumField.getText()));
+                    cardStatusField.setText("No Card");
+                }
+                break;
             case "Remove Card":
                 if (cardStatusField.getText().compareTo("Card Inserted, Please Input your Pin") == 0) {
                     cardReaderTextArea.appendText("Removing card\n");
                     cardReaderMBox.send(new Msg(id, cardReaderMBox, Msg.Type.CR_CardRemoved, cardNumField.getText()));
-                    //cardStatusField.setText("No Card");
+                    cardStatusField.setText("No Card");
                 }
                 break;
 
@@ -81,16 +95,19 @@ public class CardReaderEmulatorController {
         }
     } // buttonPressed
 
-
-    //------------------------------------------------------------
-    // updateCardStatus
+    /**
+     * This method is to change the displayed status on Card Reader Emulator
+     * @param status
+     */
     public void updateCardStatus(String status) {
         cardStatusField.setText(status);
     } // updateCardStatus
 
 
-    //------------------------------------------------------------
-    // appendTextArea
+    /**
+     * This method is to change the displayed appendTextArea
+     * @param status
+     */
     public void appendTextArea(String status) {
         cardReaderTextArea.appendText(status + "\n");
     } // appendTextArea
