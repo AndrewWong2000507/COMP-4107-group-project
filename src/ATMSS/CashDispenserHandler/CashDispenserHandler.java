@@ -5,7 +5,6 @@ import AppKickstarter.AppKickstarter;
 import AppKickstarter.misc.Msg;
 
 public class CashDispenserHandler extends HWHandler {
-    private double inventory = 10000000;
 
     public CashDispenserHandler(String id, AppKickstarter appKickstarter) {
         super(id, appKickstarter);
